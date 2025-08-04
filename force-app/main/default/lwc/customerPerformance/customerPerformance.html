@@ -1,0 +1,604 @@
+<template>
+	<div if:true={showSpinner} class="exampleHolder">
+		<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+	</div>
+	<lightning-card>
+		<div class="slds-p-around_small">
+			<div style="width: 50%; padding-bottom:15px;">
+				<!-- <div style="padding-bottom: 20px;">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered custom-table">
+                <thead>
+                    <th>End User Wise Achievement</th>
+                    <th>Annual Target 24-25</th>
+                    <th>7.09</th>
+                </thead>
+                <tbody>
+                    <td>Kapil Rayani</td>
+                    <td>Target up to February</td>
+                    <td>6.07</td>
+                </tbody>
+            </table>
+        </div> -->
+
+				<div class="slds-grid slds-gutters">
+					<div class="slds-col slds-size_1-of-2">
+						<lightning-record-picker label="Fiscal Year" placeholder="Search Fiscal Year..." value={fiscalYearId}
+							object-api-name="Fiscal_Year__c" disabled></lightning-record-picker>
+					</div>
+					<div>
+						<lightning-input label="User Name" value={userName} type="text" disabled></lightning-input>
+					</div>
+				</div>
+			</div>
+
+			<div class="table-container-horizontal">
+				<div class="table-container-vertical">
+					<table class="slds-table slds-table_cell-buffer slds-table_bordered custom-table">
+
+						<thead>
+							<tr>
+								<th rowspan="2">Sr. No.</th>
+								<th class="stck-header" style="z-index: 5; position: sticky; left: 0;" rowspan="2">Customer</th>
+								<th rowspan="2">District</th>
+								<th rowspan="2">Category</th>
+								<th rowspan="2">Last Year Achv.</th>
+								<th rowspan="2">Industry</th>
+								<th rowspan="2" colspan="2">Dealer</th>
+								<th rowspan="2">Target</th>
+								<template for:each={months} for:item="eachMonth" for:index="index">
+									<th class="darker" key={eachMonth} style="text-align: center; border-right: 1px solid;" colspan="7">
+										{eachMonth}
+									</th>
+								</template>
+								<!-- <th rowspan="2">Total (By Customer)</th> -->
+							</tr>
+							<tr style="text-align: left;">
+								<template for:each={months} for:item="eachMonth" for:index="index">
+									<th key={eachMonth} style="padding-left: 2px;">Conv. Common</th>
+									<th key={eachMonth}>&nbsp;&nbsp;&nbsp;Conv. SPL&nbsp;&nbsp;&nbsp;</th>
+									<th key={eachMonth}>&nbsp;&nbsp;CO2/FCAW&nbsp;&nbsp;</th>
+									<th key={eachMonth}>&nbsp;Accessories&nbsp;</th>
+									<th style="text-align: center;" key={eachMonth}>
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									</th>
+									<th style="text-align: center;" key={eachMonth}>
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									</th>
+									<th style="text-align: center;; border-right: 1px solid;" key={eachMonth}>
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SW&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									</th>
+								</template>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr>
+								<td colspan="8" style="text-align: end;"><strong>TOTAL:</strong></td>
+								<td></td>
+								<template for:each={tableCells} for:item="cell">
+									<td style="padding: 0 20px 0 20px;" key={cell.key}><strong>{cell.value}</strong></td>
+								</template>
+							</tr>
+							<template for:each={performanceMasters} for:item="eachPerformanceMaster" for:index="index">
+								<tr key={eachPerformanceMaster.performanceReportId}>
+									<td>{eachPerformanceMaster.srNo}</td>
+									<td class="stck-body" style="z-index: 4; position: sticky; left: 0; background: #f5f5f5;">{eachPerformanceMaster.CustomerName}</td>
+									<td>{eachPerformanceMaster.District}</td>
+									<td>{eachPerformanceMaster.Category}</td>
+									<td>{eachPerformanceMaster.achieveLakhs}</td>
+									<td>{eachPerformanceMaster.Industry}</td>
+									<td>{eachPerformanceMaster.Dealer}</td>
+									<td><strong>{eachPerformanceMaster.totalPerformance}</strong></td>
+									<td><lightning-input value={eachPerformanceMaster.Potential} type="number" step="0.01"
+											data-id={eachPerformanceMaster.performanceReportId} onchange={handlePerformanceChange}>
+										</lightning-input>
+									</td>
+
+									<!-- April -->
+									<template if:true={eachPerformanceMaster.performanceLineMap.April}>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.April.ConvCommon} type="number"
+												step="0.01" data-rowindex={index}
+												data-id={eachPerformanceMaster.performanceLineMap.April.performanceReportLineItemId}
+												data-month="April" data-field="ConvCommon"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.April.ConvSpl} type="number"
+												step="0.01" data-rowindex={index}
+												data-id={eachPerformanceMaster.performanceLineMap.April.performanceReportLineItemId}
+												data-month="April" data-field="ConvSpl"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.April.CO2FCAW} type="number"
+												step="0.01" data-rowindex={index}
+												data-id={eachPerformanceMaster.performanceLineMap.April.performanceReportLineItemId}
+												data-month="April" data-field="CO2FCAW"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.April.Accessories}
+												type="number" step="0.01" data-rowindex={index}
+												data-id={eachPerformanceMaster.performanceLineMap.April.performanceReportLineItemId}
+												data-month="April" data-field="Accessories"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.April.LOT} type="number"
+												step="0.01" data-rowindex={index}
+												data-id={eachPerformanceMaster.performanceLineMap.April.performanceReportLineItemId}
+												data-month="April" data-field="LOT"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.April.OA} type="number"
+												step="0.01" data-rowindex={index}
+												data-id={eachPerformanceMaster.performanceLineMap.April.performanceReportLineItemId}
+												data-month="April" data-field="OA" onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td style="border-right: 1px solid;"><lightning-input
+												value={eachPerformanceMaster.performanceLineMap.April.SW} type="number" step="0.01"
+												data-rowindex={index}
+												data-id={eachPerformanceMaster.performanceLineMap.April.performanceReportLineItemId}
+												data-month="April" data-field="SW" onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+									</template>
+
+									<!-- May -->
+									<template if:true={eachPerformanceMaster.performanceLineMap.May}>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.May.ConvCommon} type="number"
+												step="0.01" data-rowindex={index}
+												data-id={eachPerformanceMaster.performanceLineMap.May.performanceReportLineItemId}
+												data-month="May" data-field="ConvCommon"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.May.ConvSpl} type="number"
+												step="0.01" data-rowindex={index}
+												data-id={eachPerformanceMaster.performanceLineMap.May.performanceReportLineItemId}
+												data-month="May" data-field="ConvSpl"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.May.CO2FCAW} type="number"
+												step="0.01" data-rowindex={index}
+												data-id={eachPerformanceMaster.performanceLineMap.May.performanceReportLineItemId}
+												data-month="May" data-field="CO2FCAW"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.May.Accessories} type="number"
+												step="0.01" data-rowindex={index}
+												data-id={eachPerformanceMaster.performanceLineMap.May.performanceReportLineItemId}
+												data-month="May" data-field="Accessories"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.May.LOT} type="number"
+												step="0.01" data-rowindex={index}
+												data-id={eachPerformanceMaster.performanceLineMap.May.performanceReportLineItemId}
+												data-month="May" data-field="LOT" onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.May.OA} type="number"
+												step="0.01" data-rowindex={index}
+												data-id={eachPerformanceMaster.performanceLineMap.May.performanceReportLineItemId}
+												data-month="May" data-field="OA" onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td style="border-right: 1px solid;"><lightning-input
+												value={eachPerformanceMaster.performanceLineMap.May.SW} type="number" step="0.01"
+												data-rowindex={index}
+												data-id={eachPerformanceMaster.performanceLineMap.May.performanceReportLineItemId}
+												data-month="May" data-field="SW" onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+									</template>
+
+									<!-- June -->
+									<template if:true={eachPerformanceMaster.performanceLineMap.June}>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.June.ConvCommon} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.June.performanceReportLineItemId}
+												data-month="June" data-field="ConvCommon"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.June.ConvSpl} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.June.performanceReportLineItemId}
+												data-month="June" data-field="ConvSpl"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.June.CO2FCAW} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.June.performanceReportLineItemId}
+												data-month="June" data-field="CO2FCAW"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.June.Accessories} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.June.performanceReportLineItemId}
+												data-month="June" data-field="Accessories"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.June.LOT} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.June.performanceReportLineItemId}
+												data-month="June" data-field="LOT" onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.June.OA} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.June.performanceReportLineItemId}
+												data-month="June" data-field="OA" onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td style="border-right: 1px solid;"><lightning-input
+												value={eachPerformanceMaster.performanceLineMap.June.SW} type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.June.performanceReportLineItemId}
+												data-month="June" data-field="SW" onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+									</template>
+
+									<!-- July -->
+									<template if:true={eachPerformanceMaster.performanceLineMap.July}>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.July.ConvCommon} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.July.performanceReportLineItemId}
+												data-month="July" data-field="ConvCommon"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.July.ConvSpl} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.July.performanceReportLineItemId}
+												data-month="July" data-field="ConvSpl"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.July.CO2FCAW} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.July.performanceReportLineItemId}
+												data-month="July" data-field="CO2FCAW"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.July.Accessories} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.July.performanceReportLineItemId}
+												data-month="July" data-field="Accessories"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.July.LOT} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.July.performanceReportLineItemId}
+												data-month="July" data-field="LOT" onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.July.OA} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.July.performanceReportLineItemId}
+												data-month="July" data-field="OA" onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td style="border-right: 1px solid;"><lightning-input
+												value={eachPerformanceMaster.performanceLineMap.July.SW} type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.July.performanceReportLineItemId}
+												data-month="July" data-field="SW" onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+									</template>
+
+									<!-- August -->
+									<template if:true={eachPerformanceMaster.performanceLineMap.August}>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.August.ConvCommon}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.August.performanceReportLineItemId}
+												data-month="August" data-field="ConvCommon"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.August.ConvSpl} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.August.performanceReportLineItemId}
+												data-month="August" data-field="ConvSpl"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.August.CO2FCAW} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.August.performanceReportLineItemId}
+												data-month="August" data-field="CO2FCAW"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.August.Accessories}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.August.performanceReportLineItemId}
+												data-month="August" data-field="Accessories"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.August.LOT} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.August.performanceReportLineItemId}
+												data-month="August" data-field="LOT"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.August.OA} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.August.performanceReportLineItemId}
+												data-month="August" data-field="OA"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td style="border-right: 1px solid;"><lightning-input
+												value={eachPerformanceMaster.performanceLineMap.August.SW} type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.August.performanceReportLineItemId}
+												data-month="August" data-field="SW"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+									</template>
+
+									<!-- September -->
+									<template if:true={eachPerformanceMaster.performanceLineMap.September}>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.September.ConvCommon}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.September.performanceReportLineItemId}
+												data-month="September" data-field="ConvCommon"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.September.ConvSpl}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.September.performanceReportLineItemId}
+												data-month="September" data-field="ConvSpl"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.September.CO2FCAW}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.September.performanceReportLineItemId}
+												data-month="September" data-field="CO2FCAW"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.September.Accessories}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.September.performanceReportLineItemId}
+												data-month="September" data-field="Accessories"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.September.LOT} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.September.performanceReportLineItemId}
+												data-month="September" data-field="LOT"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.September.OA} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.September.performanceReportLineItemId}
+												data-month="September" data-field="OA"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td style="border-right: 1px solid;"><lightning-input
+												value={eachPerformanceMaster.performanceLineMap.September.SW} type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.September.performanceReportLineItemId}
+												data-month="September" data-field="SW"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+									</template>
+
+									<!-- October -->
+									<template if:true={eachPerformanceMaster.performanceLineMap.October}>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.October.ConvCommon}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.October.performanceReportLineItemId}
+												data-month="October" data-field="ConvCommon"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.October.ConvSpl} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.October.performanceReportLineItemId}
+												data-month="October" data-field="ConvSpl"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.October.CO2FCAW} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.October.performanceReportLineItemId}
+												data-month="October" data-field="CO2FCAW"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.October.Accessories}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.October.performanceReportLineItemId}
+												data-month="October" data-field="Accessories"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.October.LOT} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.October.performanceReportLineItemId}
+												data-month="October" data-field="LOT"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.October.OA} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.October.performanceReportLineItemId}
+												data-month="October" data-field="OA"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td style="border-right: 1px solid;"><lightning-input
+												value={eachPerformanceMaster.performanceLineMap.October.SW} type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.October.performanceReportLineItemId}
+												data-month="October" data-field="SW"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+									</template>
+
+									<!-- November -->
+									<template if:true={eachPerformanceMaster.performanceLineMap.November}>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.November.ConvCommon}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.November.performanceReportLineItemId}
+												data-month="November" data-field="ConvCommon"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.November.ConvSpl} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.November.performanceReportLineItemId}
+												data-month="November" data-field="ConvSpl"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.November.CO2FCAW} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.November.performanceReportLineItemId}
+												data-month="November" data-field="CO2FCAW"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.November.Accessories}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.November.performanceReportLineItemId}
+												data-month="November" data-field="Accessories"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.November.LOT} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.November.performanceReportLineItemId}
+												data-month="November" data-field="LOT"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.November.OA} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.November.performanceReportLineItemId}
+												data-month="November" data-field="OA"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td style="border-right: 1px solid;"><lightning-input
+												value={eachPerformanceMaster.performanceLineMap.November.SW} type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.November.performanceReportLineItemId}
+												data-month="November" data-field="SW"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+									</template>
+
+									<!-- December -->
+									<template if:true={eachPerformanceMaster.performanceLineMap.December}>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.December.ConvCommon}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.December.performanceReportLineItemId}
+												data-month="December" data-field="ConvCommon"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.December.ConvSpl} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.December.performanceReportLineItemId}
+												data-month="December" data-field="ConvSpl"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.December.CO2FCAW} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.December.performanceReportLineItemId}
+												data-month="December" data-field="CO2FCAW"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.December.Accessories}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.December.performanceReportLineItemId}
+												data-month="December" data-field="Accessories"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.December.LOT} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.December.performanceReportLineItemId}
+												data-month="December" data-field="LOT"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.December.OA} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.December.performanceReportLineItemId}
+												data-month="December" data-field="OA"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td style="border-right: 1px solid;"><lightning-input
+												value={eachPerformanceMaster.performanceLineMap.December.SW} type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.December.performanceReportLineItemId}
+												data-month="December" data-field="SW"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+									</template>
+
+									<!-- January -->
+									<template if:true={eachPerformanceMaster.performanceLineMap.January}>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.January.ConvCommon}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.January.performanceReportLineItemId}
+												data-month="January" data-field="ConvCommon"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.January.ConvSpl} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.January.performanceReportLineItemId}
+												data-month="January" data-field="ConvSpl"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.January.CO2FCAW} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.January.performanceReportLineItemId}
+												data-month="January" data-field="CO2FCAW"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.January.Accessories}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.January.performanceReportLineItemId}
+												data-month="January" data-field="Accessories"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.January.LOT} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.January.performanceReportLineItemId}
+												data-month="January" data-field="LOT"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.January.OA} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.January.performanceReportLineItemId}
+												data-month="January" data-field="OA"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td style="border-right: 1px solid;"><lightning-input
+												value={eachPerformanceMaster.performanceLineMap.January.SW} type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.January.performanceReportLineItemId}
+												data-month="January" data-field="SW"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+									</template>
+
+									<!-- February -->
+									<template if:true={eachPerformanceMaster.performanceLineMap.February}>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.February.ConvCommon}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.February.performanceReportLineItemId}
+												data-month="February" data-field="ConvCommon"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.February.ConvSpl} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.February.performanceReportLineItemId}
+												data-month="February" data-field="ConvSpl"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.February.CO2FCAW} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.February.performanceReportLineItemId}
+												data-month="February" data-field="CO2FCAW"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.February.Accessories}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.February.performanceReportLineItemId}
+												data-month="February" data-field="Accessories"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.February.LOT} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.February.performanceReportLineItemId}
+												data-month="February" data-field="LOT"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.February.OA} type="number"
+												step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.February.performanceReportLineItemId}
+												data-month="February" data-field="OA"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td style="border-right: 1px solid;"><lightning-input
+												value={eachPerformanceMaster.performanceLineMap.February.SW} type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.February.performanceReportLineItemId}
+												data-month="February" data-field="SW"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+									</template>
+
+									<!-- March -->
+									<template if:true={eachPerformanceMaster.performanceLineMap.March}>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.March.ConvCommon} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.March.performanceReportLineItemId}
+												data-month="March" data-field="ConvCommon"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.March.ConvSpl} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.March.performanceReportLineItemId}
+												data-month="March" data-field="ConvSpl"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.March.CO2FCAW} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.March.performanceReportLineItemId}
+												data-month="March" data-field="CO2FCAW"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.March.Accessories}
+												type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.March.performanceReportLineItemId}
+												data-month="March" data-field="Accessories"
+												onchange={handlePerformanceLineItemChange}></lightning-input></td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.March.LOT} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.March.performanceReportLineItemId}
+												data-month="March" data-field="LOT"
+												onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td><lightning-input value={eachPerformanceMaster.performanceLineMap.March.OA} type="number"
+												step="0.01" data-id={eachPerformanceMaster.performanceLineMap.March.performanceReportLineItemId}
+												data-month="March" data-field="OA" onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+										<td style="border-right: 1px solid;"><lightning-input
+												value={eachPerformanceMaster.performanceLineMap.March.SW} type="number" step="0.01"
+												data-id={eachPerformanceMaster.performanceLineMap.March.performanceReportLineItemId}
+												data-month="March" data-field="SW" onchange={handlePerformanceLineItemChange}></lightning-input>
+										</td>
+									</template>
+
+
+								</tr>
+							</template>
+						</tbody>
+
+					</table>
+				</div>
+			</div>
+			<div class="table-container-horizontal">
+				<div class="table-container-vertical">
+					<table class="slds-table slds-table_cell-buffer slds-table_bordered custom-table">
+
+
+
+					</table>
+				</div>
+			</div>
+
+
+			<div style="overflow-x: auto;">
+			</div>
+		</div>
+	</lightning-card>
+	<div style="text-align: center; margin: 20px 0;">
+		<lightning-button label="Save" variant="brand" onclick={handleSave}></lightning-button>
+	</div>
+</template>

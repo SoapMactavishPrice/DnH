@@ -1,0 +1,27 @@
+/* Custom CSS for Mobile Responsiveness */
+@media only screen and (max-width: 768px) {
+    .slds-combobox, .slds-input {
+        width: 100%;
+    }
+
+    .slds-grid {
+        flex-direction: column;
+    }
+}
+
+.custom-card {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important;  /* Subtle shadow */
+    border-radius: 12px !important; /* Rounded corners */
+    border: 1px solid #e0e0e0 !important; /* Subtle border for elegance */
+	background-color: #f9f9f9 !important;
+}
+
+.custom-card .slds-card__header {
+    border-bottom: 1px solid #e0e0e0 !important; /* Subtle divider */
+    border-radius: 12px 12px 0 0 !important; /* Round the top corners */
+}
+
+.custom-card .slds-p-around_medium {
+    background-color: #f9f9f9 !important; /* Light background inside */
+    border-radius: 0 0 12px 12px !important; /* Round the bottom corners */
+}

@@ -1,0 +1,276 @@
+<apex:page renderAs="pdf" showHeader="false" controller="EnquiryTaxInvoice" applyBodyTag="false">
+  <apex:variable var="rowIndex" value="{!0}" />
+  <!-- Initialize the counter -->
+  <html>
+    <head>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          font-size: 10px;
+          margin: 0;
+          padding: 0;
+        }
+
+        .header,
+        .content {
+          width: 100%;
+          margin-bottom: 20px;
+        }
+
+        .header-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 20px;
+        }
+
+        .header-table td {
+          padding: 5px;
+          border: 1px solid black;
+        }
+
+        .invoice-title {
+          text-align: center;
+          font-size: 10px;
+          font-weight: bold;
+        }
+
+        .company-details {
+          text-align: left;
+        }
+
+        .details-table {
+          width: 100%;
+          border-collapse: collapse;
+          border: 1px solid black;
+        }
+
+        .details-table th,
+        .details-table td {
+          border: 1px solid black;
+          padding: 5px;
+          text-align: center;
+        }
+
+        .footer-text {
+          margin-top: 20px;
+        }
+
+        .signature {
+          margin-top: 30px;
+          text-align: left;
+        }
+
+        .amount-summary {
+          width: 100%;
+          margin-top: 10px;
+        }
+
+        .amount-summary td {
+          padding: 5px;
+        }
+
+        .bold {
+          font-weight: bold;
+        }
+
+        .right-align {
+          text-align: right;
+        }
+
+        .highlight {
+          background-color: yellow;
+        }
+
+        table tr td {
+          border: 1px solid;
+        }
+      </style>
+    </head>
+    <body>
+                <apex:outputPanel rendered="{!NOT(ISNULL(enquiryLineItems)) && enquiryLineItems.size > 0}">
+      <!-- Header Section -->
+      <div class="header">
+        <table style=" width:100%; border:none; border-collapse: collapse; ">
+          <tr>
+            <td style="padding:5px 5px;font-size:16px;border-collapse: collapse;width:70%;">
+              <img style="width:200px;height:60px" alt="logo" src="{!$Resource.DH_Logo}" />
+            </td>
+            <td style="padding:5px 5px;font-size:12px;border-collapse: collapse;width:30%;">
+              <b>Quotation</b>
+              <p style="margin:0px;">DATE:
+                <apex:outputText value="{!formattedDate}" />
+              </p>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <table style="width:100%;border-collapse: collapse;border: 0.5px solid black;margin-top:10px;">
+        <tr>
+          <td style="padding:5px;font-size:18px;text-align:left;border-collapse: collapse;width:50%;">
+            <strong>D&amp;H Sécheron Electrodes Pvt. Ltd.</strong>
+            <br />
+          </td>
+        </tr>
+        <tr></tr>
+        <tr>
+          <td style="padding:5px;font-size:12px;text-align:left;border-collapse: collapse;width:50%;">
+            <strong>To,</strong>
+          </td>
+        </tr>
+        <tr>
+          <!-- <td style="padding:5px;font-size:12px;text-align:left;border-collapse: collapse;width:50%;"><strong>M/s.{!enquiryLineItems[0].Enquiry__r.Account__r.name}</strong></td> -->
+          <!-- <apex:outputPanel rendered="{!NOT(ISNULL(enquiryLineItems)) && enquiryLineItems.size > 0}"> -->
+            <td style="padding:5px;font-size:12px;text-align:left;border-collapse: collapse;width:50%;">
+              <strong>
+                M/s. {!IF(NOT(ISBLANK(enquiryLineItems[0].Enquiry__r.End_Customer__c)), enquiryLineItems[0].Enquiry__r.End_Customer__r.Name, enquiryLineItems[0].Enquiry__r.Account__r.Name)}
+            </strong>
+            </td>
+          <!-- </apex:outputPanel> -->
+        </tr>
+        <tr>
+          <!-- <apex:outputPanel rendered="{!NOT(ISNULL(enquiryLineItems)) && enquiryLineItems.size > 0}"> -->
+            <td style="padding:5px;font-size:12px;text-align:left;border-collapse: collapse;width:50%;">
+              <strong>
+                {!IF(NOT(ISNULL(enquiryLineItems[0].Enquiry__r.End_Customer__c)), IF(NOT(ISBLANK(enquiryLineItems[0].Enquiry__r.End_Customer__r.BillingStreet)), enquiryLineItems[0].Enquiry__r.End_Customer__r.BillingStreet, enquiryLineItems[0].Enquiry__r.Account__r.BillingStreet), enquiryLineItems[0].Enquiry__r.Account__r.BillingStreet)},<br />
+                {!IF(NOT(ISNULL(enquiryLineItems[0].Enquiry__r.End_Customer__c)), IF(NOT(ISBLANK(enquiryLineItems[0].Enquiry__r.End_Customer__r.BillingCity)), enquiryLineItems[0].Enquiry__r.End_Customer__r.BillingCity, enquiryLineItems[0].Enquiry__r.Account__r.BillingCity), enquiryLineItems[0].Enquiry__r.Account__r.BillingCity)},<br />
+                {!IF(NOT(ISNULL(enquiryLineItems[0].Enquiry__r.End_Customer__c)), IF(NOT(ISBLANK(enquiryLineItems[0].Enquiry__r.End_Customer__r.BillingState)), enquiryLineItems[0].Enquiry__r.End_Customer__r.BillingState, enquiryLineItems[0].Enquiry__r.Account__r.BillingState), enquiryLineItems[0].Enquiry__r.Account__r.BillingState)},<br />
+                {!IF(NOT(ISNULL(enquiryLineItems[0].Enquiry__r.End_Customer__c)), IF(NOT(ISBLANK(enquiryLineItems[0].Enquiry__r.End_Customer__r.BillingPostalCode)), enquiryLineItems[0].Enquiry__r.End_Customer__r.BillingPostalCode, enquiryLineItems[0].Enquiry__r.Account__r.BillingPostalCode), enquiryLineItems[0].Enquiry__r.Account__r.BillingPostalCode)},{!IF(NOT(ISNULL(enquiryLineItems[0].Enquiry__r.End_Customer__c)), IF(NOT(ISBLANK(enquiryLineItems[0].Enquiry__r.End_Customer__r.BillingCountry)), enquiryLineItems[0].Enquiry__r.End_Customer__r.BillingCountry, enquiryLineItems[0].Enquiry__r.Account__r.BillingCountry), enquiryLineItems[0].Enquiry__r.Account__r.BillingCountry)},<br />
+
+                <!-- {!enquiryLineItems[0].Enquiry__r.Account__r.BillingCity} <br />
+                {!enquiryLineItems[0].Enquiry__r.Account__r.BillingState} <br /> -->
+                <!-- {!enquiryLineItems[0].Enquiry__r.Account__r.BillingPostalCode},{!enquiryLineItems[0].Enquiry__r.Account__r.BillingCountry} -->
+              </strong>
+              <!--<strong>{!enquiryLineItems[0].Enquiry__r.Account__r.BillingAddress}</strong>-->
+            </td>
+          <!-- </apex:outputPanel> -->
+        </tr>
+        <tr>
+          <!-- <apex:outputPanel rendered="{!NOT(ISNULL(enquiryLineItems)) && enquiryLineItems.size > 0}"> -->
+            <td style="padding:5px;font-size:12px;text-align:left;border-collapse: collapse;width:50%;">
+              <strong>Contact Person:</strong>
+              <span>{!enquiryLineItems[0].Enquiry__r.Contact__r.Name}</span>
+            </td>
+          <!-- </apex:outputPanel> -->
+        </tr>
+        <tr>
+          <!-- <apex:outputPanel rendered="{!NOT(ISNULL(enquiryLineItems)) && enquiryLineItems.size > 0}"> -->
+            <td style="padding:5px;font-size:12px;text-align:left;border-collapse: collapse;width:50%;">
+              <strong>Phone No:</strong>
+              <span>{!enquiryLineItems[0].Enquiry__r.Contact__r.MobilePhone}</span>
+            </td>
+          <!-- </apex:outputPanel> -->
+        </tr>
+        <tr>
+          <!-- <apex:outputPanel rendered="{!NOT(ISNULL(enquiryLineItems)) && enquiryLineItems.size > 0}"> -->
+            <td style="padding:5px;font-size:12px;text-align:left;border-collapse: collapse;width:50%;">
+              <strong>Email Id:</strong>
+              <span>{!enquiryLineItems[0].Enquiry__r.Contact__r.Email}</span>
+            </td>
+          <!-- </apex:outputPanel> -->
+        </tr>
+      </table>
+      <br />
+      <apex:outputPanel id="lineItemWrapper">
+        <table style="width:100%;border-collapse: collapse;border: 0.5px solid black;">
+          <thead>
+            <tr>
+              <td style="font-size:12px;text-align:center;background-color: #E8E8E8;border:0.5px solid black;border-left:0px solid black;border-bottom:0.5px solid blackborder-collapse: collapse;width:0%;">
+                <b>Sr. No</b>
+              </td>
+              <td style="padding:5px;font-size:12px;text-align:center;background-color: #E8E8E8;border:0.5px solid black;border-bottom:0.5px solid black;border-right:0px solid black;border-collapse: collapse;">
+                <b> AWS Grade </b>
+              </td>
+              <td style="font-size:12px;text-align:center;background-color: #E8E8E8;border:0.5px solid black;border-bottom:0.5px solid black;border-right:0px solid black;border-collapse: collapse;width:0%;">
+                <b> Product Name </b>
+              </td>
+              <td style="font-size:12px;text-align:center;background-color: #E8E8E8;border:0.5px solid black;border-bottom:0.5px solid black;border-right:0px solid black;border-collapse: collapse;width:0%;">
+                <b> Size(mm) </b>
+              </td>
+              <td style="font-size:12px;text-align:center;background-color: #E8E8E8;border:0.5px solid black;border-bottom:0.5px solid black;border-right:0px solid black;border-collapse: collapse;width:0%;">
+                <b> UOM </b>
+              </td>
+              <td style="font-size:12px;text-align:center;background-color: #E8E8E8;border:0.5px solid black;border-bottom:0.5px solid black;border-right:0px solid black;border-collapse: collapse;width:0%;">
+                <b> Rate </b>
+              </td>
+              <td style="font-size:12px;text-align:center;background-color: #E8E8E8;border:0.5px solid black;border-bottom:0.5px solid black;border-right:0px solid black;border-collapse: collapse;width:0%;">
+                <b> Standard Packing </b>
+              </td>
+              <td style="font-size:12px;text-align:center;background-color: #E8E8E8;border:0.5px solid black;border-bottom:0.5px solid black;border-right:0px solid black;border-collapse: collapse;width:0%;">
+                <b> Remarks </b>
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            <apex:repeat value="{!enquiryLineItems}" var="item" id="lineItemTable">
+              <apex:variable var="rowIndex" value="{!rowIndex + 1}" />
+              <!-- Increment the counter -->
+              <tr>
+                <td style="font-size:12px;text-align:center;border:0.5px solid black;border-collapse: collapse;">
+                  <apex:outputText value="{!rowIndex}" />
+                </td>
+                <td style="font-size:12px;text-align:center;border:0.5px solid black;border-collapse: collapse;">
+                  <apex:outputField value="{!item.AWS_Grade__c}"/>
+                </td>
+                <td style="font-size:12px;text-align:center;border:0.5px solid black;border-collapse: collapse;">
+                  <apex:outputField value="{!item.Item_Master__r.Name}" />
+                </td>
+                <td style="font-size:12px;text-align:center;border:0.5px solid black;border-collapse: collapse;">
+                  <apex:outputField value="{!item.Item_Master__r.Dim_Size__c}" />
+                </td>
+                <td style="font-size:12px;text-align:center;border:0.5px solid black;border-collapse: collapse;">
+                  <apex:outputField value="{!item.UMO__c}" />
+                </td>
+                <td style="font-size:12px;text-align:center;border:0.5px solid black;border-collapse: collapse;">
+                  <apex:outputField value="{!item.Rate_INR_USD__c}" />
+                  <apex:outputField value="{!item.Rate_In__c}" />
+                </td>
+                <td style="font-size:12px;text-align:center;border:0.5px solid black;border-collapse: collapse;">
+                  <apex:outputField value="{!item.Item_Variant__r.Code__c}"/>
+                </td>
+                <td style="font-size:12px;text-align:center;border:0.5px solid black;border-collapse: collapse;">
+                  <apex:outputField value="{!item.Remarks__c}" />
+                </td>
+              </tr>
+            </apex:repeat>
+            <apex:outputPanel rendered="{!enquiryLineItems.size == 0}">
+              <tr>
+                <td colspan="3" style="text-align:center;">No enquiry line items available.</td>
+              </tr>
+            </apex:outputPanel>
+          </tbody>
+        </table>
+      </apex:outputPanel>
+      <div class="footer-text">
+        <br />
+        <p>Note: We require one line deviation acceptance confirmation from your end.</p>
+        <h3>Terms Conditions</h3>
+
+          <ol>
+            <li>GST: {!enquiryLineItems[0].Enquiry__r.GST__c}</li>
+            <li>Delivery:{!enquiryLineItems[0].Enquiry__r.Delivery_Terms__c}</li>
+            <li>Payment Terms: {!enquiryLineItems[0].Enquiry__r.Other_Payment_Terms__c} </li>
+            <li>Offer Validity:{!enquiryLineItems[0].Enquiry__r.Offer_Validity__c} from the date of invoice.</li>
+            <li>Supply: {!enquiryLineItems[0].Enquiry__r.Supply__c}</li>
+            <li>Shipping: {!enquiryLineItems[0].Enquiry__r.Inco_Terms__c}.</li>
+            <li>Additional Terms: {!enquiryLineItems[0].Enquiry__r.Additional_Information__c}.</li>
+          </ol>
+
+        <p>We hope our offer is in line with your requirements. Expecting your valuable orders at the earliest.</p>
+        <p>Assuring you our best of services!!!</p>
+      </div>
+      <div class="signature">
+        <div> With Regards, <br /></div>
+        <apex:outputPanel rendered="{!NOT(ISNULL(enquiryLineItems[0].Enquiry__r.Field_Staff_Name__c))}">
+            <div>{!enquiryLineItems[0].Enquiry__r.Field_Staff_Name__c}</div>
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!NOT(ISNULL(enquiryLineItems[0].Enquiry__r.Field_Staff_Code__c))}">
+            <div>{!enquiryLineItems[0].Enquiry__r.Field_Staff_Code__r.Phone}</div>
+        </apex:outputPanel>
+      </div>
+              </apex:outputPanel>
+              <apex:outputPanel rendered="{!enquiryLineItems.size == 0}">
+                <p>No Enquiry Line Item Present</p>
+            </apex:outputPanel>
+    </body>
+  </html>
+</apex:page>

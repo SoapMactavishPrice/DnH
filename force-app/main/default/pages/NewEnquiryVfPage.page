@@ -1,0 +1,7 @@
+<apex:page showHeader="false" sidebar="false" contentType="text/html">
+    <script>
+        // Redirect to the desired URL and force refresh
+    	window.location.reload();
+        window.location.href = '/lightning/n/New_Enquiry';
+    </script>
+</apex:page>

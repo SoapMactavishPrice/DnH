@@ -1,0 +1,34 @@
+.centered-column {
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    border: 1px solid #d8dde6;
+    /* SLDS gray border */
+}
+
+/* Freeze the first column */
+.freeze-first-col td:first-child,
+.freeze-first-col th:first-child {
+    position: sticky;
+    left: 0;
+    background: white;
+    z-index: 2;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid #d8dde6;
+    /* Optional: emphasize sticky col edge */
+}
+
+/* Sticky header row styling */
+.freeze-first-col thead th {
+    z-index: 3;
+    top: 0;
+    background: #f3f6f9;
+    /* SLDS table header background */
+    border: 1px solid #d8dde6;
+    border-bottom: 2px solid #c9c9c9;
+}
+
+/* Optional: zebra striping rows */
+.freeze-first-col tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}

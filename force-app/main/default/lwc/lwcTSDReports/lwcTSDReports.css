@@ -1,0 +1,30 @@
+/* Style the tabset container */
+.tabs-container {
+    /* padding: 1rem; */
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    background-color: #ffffff;
+}
+
+/* Style the tabs */
+lightning-tab {
+    /* font-weight: bold;
+    color: #706e6b; */
+}
+
+lightning-tab:hover {
+    background-color: #f3f2f2;
+}
+
+/* Style the active tab */
+lightning-tab[active] {
+    color: #0176d3;
+    border-bottom: 2px solid #0176d3;
+}
+
+/* Style the tab content area */
+.tab-content {
+    padding: 1rem;
+    /* margin-top: 1rem; */
+    /* border-top: 1px solid #dddbda; */
+}

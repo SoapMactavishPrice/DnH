@@ -1,0 +1,260 @@
+.center-combobox {
+    display: flex;
+    justify-content: center;
+    /* Center horizontally */
+    align-items: center;
+    /* Center vertically (if you have a height) */
+    height: 100%;
+    /* Optional: Set if you want vertical centering */
+
+}
+
+.center-combobox .slds-combobox__input {
+    max-width: 300px;
+    /* Reduce the size of the combobox as needed */
+    padding: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.slds-combobox_container .slds-input::placeholder {
+    font-size: 1.2rem;
+    /* Adjust this value to your desired size */
+    color: #888888;
+    /* Optional: Adjust color for placeholder */
+}
+
+.formobile-table {
+    overflow-x: auto;
+    /* Enable horizontal scroll */
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scrolling for mobile */
+}
+
+.formobile-table-width {
+    min-width: 800px;
+}
+
+/* Make the container scrollable */
+.formob-scrollable-container {
+    display: block;
+    overflow-x: auto;
+    /* Enable horizontal scrolling */
+    white-space: nowrap;
+    /* Prevent wrapping */
+    padding: 10px;
+}
+
+/* Style for the table to keep width intact */
+.formob-scrollable-container lightning-datatable {
+    width: 100%;
+    /* Ensure the table retains its original width */
+}
+
+/* Pagination buttons styling */
+.formob-pagination-container {
+    display: inline-block;
+    margin-top: 10px;
+    text-align: center;
+    white-space: nowrap;
+    /* Keep buttons on a single line */
+}
+
+.form-container {
+    border: 1px solid #ccc;
+    padding: 16px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+    font-size: 18px;
+    color: #e40000;
+    font-weight: bold;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #e40000;
+    padding-bottom: 8px;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    /* Adds space between the elements */
+}
+
+.input-field {
+    flex: 1;
+    /* Makes all input fields take equal width */
+    min-width: 150px;
+    /* Ensures input fields do not shrink too small */
+}
+
+.file-input-container {
+    display: flex;
+    align-items: center;
+}
+
+.file-input {
+    cursor: pointer;
+}
+
+/* Header Section */
+.mobile-header {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: #f4f6f9;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-title {
+    font-size: 1.2rem;
+    margin-left: 1rem;
+    flex: 1;
+    text-align: center;
+}
+
+/* Content Section */
+.mobile-content {
+    padding: 1rem;
+    background-color: #ffffff;
+}
+
+/* Search Section */
+.search-section {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.search-box {
+    width: 60%;
+    max-width: 20rem;
+    font-size: 1rem;
+}
+
+/* Data Table Section */
+.data-table-section {
+    margin-bottom: 1rem;
+    overflow-x: auto;
+}
+
+.data-table-section lightning-datatable {
+    font-size: 0.9rem;
+}
+
+/* Pagination Section */
+.pagination-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.pagination-button {
+    font-size: 0.8rem;
+}
+
+.page-info {
+    font-size: 0.9rem;
+}
+
+/* Form Section */
+.form-section {
+    margin-bottom: 1rem;
+}
+
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-fields lightning-input-field,
+.form-fields lightning-combobox {
+    width: 100%;
+}
+
+/* File Upload for Special Orders */
+.file-upload-label {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.action-buttons lightning-button {
+    flex: 1;
+    max-width: 8rem;
+    text-align: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+    .pagination-section {
+        flex-direction: column;
+    }
+
+    .action-buttons lightning-button {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+.card-container {
+    border: 1px solid #d8dde6;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-container:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background-color: #a52c30;
+    color: #ffffff;
+    padding: 8px;
+    border-radius: 6px 6px 0 0;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.card-content .row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.card-content .label {
+    font-weight: bold;
+    color: #555555;
+}
+
+.card-content .value {
+    color: #333333;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.card-container:nth-child(even) {
+    background-color: #f9f9f9;
+}

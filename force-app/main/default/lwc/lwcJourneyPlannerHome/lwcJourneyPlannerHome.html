@@ -1,0 +1,344 @@
+<template>
+
+	<div if:true={showSpinner}>
+		<lightning-spinner variant="brand" alternative-text="Loading" size="medium"></lightning-spinner>
+	</div>
+
+	<lightning-layout multiple-rows lwc:ref="parentTemplate" style="padding: 5px; background-color: #f0f0f0" gap="50px">
+		<!-- style="padding: 0px 0px var(--lwc-templateGutters,0.75rem) 0px"> -->
+
+
+		<lightning-layout-item size="12" small-device-size={componentSizes.left.small}
+			medium-device-size={componentSizes.left.medium} large-device-size={componentSizes.first.large}
+			if:false={recordId}>
+			<lightning-card variant="narrow" class="drag_source_parent total-height">
+				<lightning-card variant="narrow" class="entity-dropdown">
+					<lightning-layout multiple-rows>
+						<!-- <lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+                            large-device-size="12">
+                            <lightning-combobox class="slds-p-around_xx-small mobile-zoom-85" variant="label-hidden"
+                                options={routePlannerOptions} value={selectedRoutePlanner}
+                                placeholder="Select Route Planner"
+                                onchange={handleRoutePlannerChange}></lightning-combobox>
+                        </lightning-layout-item> -->
+
+						<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+							large-device-size="12">
+							<lightning-combobox class="slds-p-horizontal_xx-small mobile-zoom-85" variant="label-hidden"
+								options={entityOptions} value={objApiName}
+								onchange={handleObjApiNameChange}></lightning-combobox>
+						</lightning-layout-item>
+
+						<template if:true={isAccount}>
+							<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+								large-device-size="12">
+								<lightning-combobox class="slds-p-around_xx-small mobile-zoom-85" variant="label-hidden"
+									options={routePlannerOptions} value={selectedRoutePlanner}
+									placeholder="Select Route Planner"
+									onchange={handleRoutePlannerChange}></lightning-combobox>
+							</lightning-layout-item>
+						</template>
+						<template if:true={isContact}>
+							<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+								large-device-size="12">
+								<lightning-combobox class="slds-p-around_xx-small mobile-zoom-85" variant="label-hidden"
+									options={routePlannerOptions} value={selectedRoutePlanner}
+									placeholder="Select Route Planner"
+									onchange={handleRoutePlannerChange}></lightning-combobox>
+							</lightning-layout-item>
+						</template>
+						<template if:true={isLead}>
+							<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+								large-device-size="12">
+								<lightning-combobox class="slds-p-around_xx-small mobile-zoom-85" variant="label-hidden"
+									options={industryGrpOptions} value={selectedIndustryGrp}
+									placeholder="Select Industry Group"
+									onchange={handleIndustryGrpChange}></lightning-combobox>
+							</lightning-layout-item>
+						</template>
+
+						<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+							large-device-size="12">
+							<lightning-input class="slds-p-horizontal_xx-small mobile-zoom-85" variant="label-hidden"
+								placeholder="Search..." value={searchText}
+								onkeyup={handleEntitySearch}></lightning-input>
+						</lightning-layout-item>
+
+
+					</lightning-layout>
+				</lightning-card>
+
+				<lightning-card variant="narrow">
+					<lightning-layout class="slds-p-bottom_medium gray_bg scroll entity-list">
+						<!-- style="height: 40em" -->
+						<template for:each={entityList} for:item="entity" for:index="index">
+							<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+								large-device-size="12" key={entity.Id}>
+								<div class="slds-m-top_xx-small slds-m-horizontal_x-small box white_bg draggable mobile-entity"
+									style="cursor: grab; width: 95%" data-index={index} data-type="Entity"
+									draggable="true" ondragstart={handleDragStart} ondragend={handleDragEnd}
+									ontouchstart={handleTouchStart} ontouchmove={handleTouchMove}
+									ontouchend={handleTouchEnd}>
+									<span class="ellipsis">{entity.Name}</span>
+									<span if:true={entity.AssetName} class="ellipsis">{entity.AssetName}</span>
+									<span class="ellipsis">{entity.CityName}</span>
+									<span if:true={entity.Stage_Name__c} class="ellipsis">{entity.Stage_Name__c}</span>
+
+
+								</div>
+							</lightning-layout-item>
+						</template>
+					</lightning-layout>
+				</lightning-card>
+			</lightning-card>
+		</lightning-layout-item>
+
+
+
+		<lightning-layout-item size="12" small-device-size={componentSizes.middle.small}
+			medium-device-size={componentSizes.middle.medium} large-device-size={componentSizes.middle.large}
+			style="padding: 0px 5px">
+			<lightning-card variant="narrow" class="total-height">
+				<div class="calendar">
+					<div class="month">
+						<div style="width:30%; z-index: 1">
+							<!--
+							<div if:false={recordId} style="width: 70%; text-align: left; cursor: pointer">
+								<c-custom-dropdown if:true={cityMasterList} lwc:ref="customDropdown1" obj-name="City"
+									obj-api-name="City" master-list={cityMasterList}
+									ongetselectedids={handleSelectedCityNames}></c-custom-dropdown>
+							</div>
+						-->
+						</div>
+
+						<div style="width: 5%">
+							<lightning-icon if:false={recordId} class="next" icon-name="utility:chevronleft"
+								size="x-small" onclick={prevDateHeader}
+								style="text-align: left; cursor: pointer"></lightning-icon>
+						</div>
+
+						<div class="date_header" style="font-weight: 700; width: 30%"></div>
+
+						<div style="width: 5%">
+							<lightning-icon if:false={recordId} class="next" icon-name="utility:chevronright"
+								size="x-small" onclick={nextDateHeader}
+								style="text-align: right; cursor: pointer"></lightning-icon>
+						</div>
+
+						<div class="switch_mode" style="width: 30%; justify-content: flex-end">
+							<div if:false={recordId} style="padding-right: 10px">
+								<lightning-button if:true={isLargeDevice} variant="Neutral" style="text-align: center"
+									label="Submit for Approval" title="Submit for Approval"
+									onclick={handleSubmitForApproval}></lightning-button>
+								<!-- disabled={isInApprovalProcess} -->
+								<!-- <lightning-icon if:false={isLargeDevice} icon-name="action:submit_for_approval"
+									alternative-text="Submit for Approval" label="Submit for Approval"
+									title="Submit for Approval" style="text-align: center" size="x-small"
+									onclick={handleSubmitForApproval}></lightning-icon> -->
+								<!-- disabled={isInApprovalProcess} -->
+							</div>
+						</div>
+					</div>
+
+					<div class="calendar_view">
+						<div class="weekdays">
+							<div><span class="ellipsis">Sun</span></div>
+							<div><span class="ellipsis">Mon</span></div>
+							<div><span class="ellipsis">Tue</span></div>
+							<div><span class="ellipsis">Wed</span></div>
+							<div><span class="ellipsis">Thu</span></div>
+							<div><span class="ellipsis">Fri</span></div>
+							<div><span class="ellipsis">Sat</span></div>
+						</div>
+						<div class="calendar_month_view">
+							<div class="month_days drop_target_parent"></div>
+						</div>
+						<div class="calendar_week_view">
+							<div class="week_days drop_target_parent"></div>
+						</div>
+					</div>
+				</div>
+
+				<div if:false={isSmallDevice} class="calendar-legend slds-m-top_large slds-m-bottom_x-small">
+					<!-- <div>
+                        <div class="circle approved"></div>
+                        <div>Approved</div>
+                    </div>
+                    <div>
+                        <div class="circle approved-and-edited"></div>
+                        <div>Approved but edited by Manager</div>
+                    </div>
+                    <div>
+                        <div class="circle rejected"></div>
+                        <div>Rejected</div>
+                    </div> -->
+					<div>
+						<!-- <div class="circle none-submitted"></div>
+                        <div>New Event</div> -->
+					</div>
+					<!-- <div>
+                        <div class="circle created-outside"></div>
+                        <div>Created outside of Journey Planner</div>
+                    </div> -->
+				</div>
+
+
+			</lightning-card>
+		</lightning-layout-item>
+
+		<lightning-layout-item size="12" small-device-size={componentSizes.right.small}
+			medium-device-size={componentSizes.right.medium} large-device-size={componentSizes.right.large}
+			onselect={selectedDateEventsList} if:false={recordId}>
+
+			<lightning-card variant="narrow" class="total-height mobile-zoom-85">
+				<div class="slds-p-around_small slds-text-heading_medium slds-text-align_center event-header">
+
+					{eventViewCurrentDate}
+				</div>
+
+
+				<lightning-layout multiple-rows class=" slds-p-bottom_medium gray_bg scroll event-list">
+					<template for:each={selectedDateEventsList} for:item="item" for:index="index">
+						<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+							large-device-size="12" key={item.Id} if:true={item.isExpanded}>
+							<div class="slds-m-top_xx-small slds-m-horizontal_x-small box white_bg slds-grid slds-wrap">
+
+								<!-- <lightning-combobox class="slds-size_2-of-2" value={item.Meeting_Purpose__c}
+                                    options={meetingPurposeOptions} label="Meeting Purpose" variant="label-stacked"
+                                    data-index={index} data-api="Meeting_Purpose__c"
+                                    onchange={handleEventDetailsChange}>
+                                </lightning-combobox> -->
+								<lightning-combobox class="slds-size_2-of-2" value={item.Visit_Purpose__c}
+									options={visitPurposeOptions} label="Visit Purpose" variant="label-stacked"
+									data-index={index} data-api="Visit_Purpose__c" onchange={handleEventDetailsChange}>
+								</lightning-combobox>
+
+								<lightning-input class="slds-size_2-of-2" value={item.Subject} label="Subject"
+									variant="label-stacked" data-index={index} data-api="Subject"
+									onkeyup={handleEventDetailsChange}></lightning-input>
+
+
+
+
+								<!-- <div style=" width: 100%">
+                                    <label style="width: 100%">Name</label>
+                                    <div style="width: 100%; display: flex; flex-direction: row">
+                                        <lightning-combobox style="width: 25%" value={item.WhoName}
+                                            options={WhoIdOptions} variant="label-hidden" data-index={index}
+                                            data-api="WhoName" onchange={handleEventDetailsChange}>
+                                        </lightning-combobox>
+                                        <c-enhanced-custom-lookup if:true={item.isLead}
+                                            style="width: 73%; padding-left: 2%" object-api-name="Lead__c"
+                                            icon-name="standard:lead" default-record-id={item.WhoId} return-fields=""
+                                            sort-column="Name" display-fields="" query-fields="['Name']"
+                                            data-index={index} data-api="WhoId"
+                                            onrecordselection={handleEventDetailsChange}></c-enhanced-custom-lookup>
+                                        <c-enhanced-custom-lookup if:true={item.isContact}
+                                            style="width: 73%; padding-left: 2%" object-api-name="Contact"
+                                            icon-name="standard:contact" default-record-id={item.WhoId} return-fields=""
+                                            sort-column="Name" display-fields="MOM_Account_Name__c"
+                                            query-fields="['Name']" data-index={index} data-api="WhoId"
+                                            onrecordselection={handleEventDetailsChange}></c-enhanced-custom-lookup>
+                                    </div>
+                                </div> -->
+
+								<!-- <div style=" width: 100%">
+                                    <label style="width: 100%">Related To</label>
+                                    <div style="width: 100%; display: flex; flex-direction: row">
+                                        <lightning-combobox style="width: 25%" value={item.WhatName}
+                                            options={WhatIdOptions} variant="label-hidden" data-index={index}
+                                            data-api="WhatName" onchange={handleEventDetailsChange}>
+                                        </lightning-combobox>
+                                        <c-enhanced-custom-lookup if:true={item.isAccount}
+                                            style="width: 73%; padding-left: 2%" object-api-name="Account"
+                                            icon-name="standard:account" default-record-id={item.WhatId}
+                                            return-fields="" sort-column="Name" display-fields=""
+                                            query-fields="['Name']" data-index={index} data-api="WhatId"
+                                            data-object={item.WhatName}
+                                            onrecordselection={handleEventDetailsChange}></c-enhanced-custom-lookup>
+                                    </div>
+                                </div> -->
+
+								<c-enhanced-custom-lookup if:true={isAttendeesVisible}
+									style="width: 98%; margin-left: 1.5%;" object-api-name="User"
+									filter="isActive = true" icon-name="standard:user" return-fields=""
+									sort-column="Name" display-fields="" query-fields="['Name']"
+									lookup-label="Attendees" data-index={index} data-api="Attendees"
+									onrecordselection={handleEventDetailsChange}>
+								</c-enhanced-custom-lookup>
+
+								<c-enhanced-custom-lookup if:false={isAttendeesVisible} style="width: 98%"
+									object-api-name="User" filter="isActive = true" icon-name="standard:user"
+									return-fields="" sort-column="Name" display-fields="" query-fields="['Name']"
+									lookup-label="Attendees" data-index={index} data-api="Attendees"
+									onrecordselection={handleEventDetailsChange}>
+								</c-enhanced-custom-lookup>
+
+								<div class="slds-p-top_xx-small" for:each={item.Attendees} for:item="attendee"
+									for:index="attendeeIndex" key={attendee.Id}>
+									<lightning-pill class="slds-p-around_xx-small" label={attendee.Name}
+										data-index={index} data-attendee-index={attendeeIndex}
+										onremove={handleRemoveAttendee}>
+										<!-- <lightning-icon icon-name="action:User"></lightning-icon> -->
+									</lightning-pill>
+								</div>
+
+								<lightning-textarea class="slds-size_2-of-2" type="text" value={item.Description}
+									label="Description" variant="label-stacked" data-index={index}
+									data-api="Description" onchange={handleEventDetailsChange}></lightning-textarea>
+
+
+
+								<!-- <lightning-combobox class="slds-size_1-of-2" value={item.Appointment_Taken__c}
+                                    options={appointmentTakenOptions} label="Appointment Taken" variant="label-stacked"
+                                    data-index={index} data-api="Appointment_Taken__c"
+                                    onchange={handleEventDetailsChange}>
+                                </lightning-combobox> -->
+
+								<lightning-input class="slds-size_2-of-2" type="datetime" value={item.StartDateTime}
+									label="Start" variant="label-stacked" data-index={index} data-api="StartDateTime"
+									onchange={handleEventDetailsChange}></lightning-input>
+
+								<lightning-input class="slds-size_2-of-2" type="datetime" value={item.EndDateTime}
+									label="End" variant="label-stacked" data-index={index} data-api="EndDateTime"
+									onchange={handleEventDetailsChange}></lightning-input>
+
+								<lightning-button variant="Destructive" style="width: 33%; text-align: center"
+									label="Delete" data-index={index} data-action="Delete"
+									onclick={updateEventAction}></lightning-button>
+
+								<lightning-button variant="neutral" style="width: 33%; text-align: center"
+									label="Cancel" data-index={index} data-action="Cancel" onclick={updateEventAction}>
+								</lightning-button>
+
+								<lightning-button variant="brand" style="width: 33%; text-align: center" label="Update"
+									data-index={index} data-action="Submit"
+									onclick={updateEventAction}></lightning-button>
+
+							</div>
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+							large-device-size="12" key={item.Id} if:false={item.isExpanded} style="cursor: pointer"
+							data-index={index} onclick={handleExpandEvent}>
+							<div class="slds-m-top_xx-small slds-m-horizontal_x-small box white_bg slds-grid">
+								<div class="slds-size_2-of-12">
+									<lightning-icon icon-name="standard:event" size="medium"></lightning-icon>
+								</div>
+								<div class="slds-size_10-of-12">
+									<span class="ellipsis">{item.Title}</span>
+									<span if:true={item.Location}>
+										<span>{item.Location}</span>
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									</span>
+									<i>{item.StartTime} - {item.EndTime}</i>
+								</div>
+							</div>
+						</lightning-layout-item>
+					</template>
+				</lightning-layout>
+			</lightning-card>
+		</lightning-layout-item>
+
+	</lightning-layout>
+
+</template>

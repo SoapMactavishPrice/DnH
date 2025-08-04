@@ -1,0 +1,6 @@
+.widthsize{
+    width: 11% !important;
+}
+.common-error{
+    border-bottom: 2px solid var(--red);
+}

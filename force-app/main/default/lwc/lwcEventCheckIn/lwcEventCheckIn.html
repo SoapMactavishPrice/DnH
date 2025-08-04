@@ -1,0 +1,23 @@
+<template>
+    <lightning-spinner alternative-text="Loading location" size="medium" if:true={showSpinner}></lightning-spinner>
+    <lightning-card title="Current Location" icon-name="utility:location">
+        <template if:true={showMap}>
+            <div style="width:200px;height:200px">
+            <lightning-map
+                map-markers={mapMarkers}
+                zoom-level="14"
+                center={center}
+                markers-title="Your Current Location"
+            ></lightning-map>
+            </div>
+        </template>
+        <div style="text-align: center;">
+            <lightning-button label="Confirm Location" variant="brand" onclick={handleConfirm}></lightning-button>
+        </div>
+        <template if:false={mapMarkers}>
+            <div class="loading">
+                Fetching your current location...  
+            </div>
+        </template>
+    </lightning-card>
+</template>

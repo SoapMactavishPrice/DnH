@@ -1,0 +1,90 @@
+<apex:page renderAs="pdf" showHeader="false"  applyBodyTag="false" >
+    <html>
+        <head>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    font-size: 10px;
+                    margin: 0;
+                    padding: 0;
+                }
+                .header, .content {
+                    width: 100%;
+                    margin-bottom: 20px;
+                }
+                .header-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 20px;
+                }
+                .header-table td {
+                    padding: 5px;
+                    border: 1px solid black;
+                }
+                .invoice-title {
+                    text-align: center;
+                    font-size: 10px;
+                    font-weight: bold;
+                }
+                .company-details {
+                    text-align: left;
+                }
+                .details-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    border: 1px solid black;
+                }
+                .details-table th, .details-table td {
+                    border: 1px solid black;
+                    padding: 5px;
+                    text-align: center;
+                }
+                .footer-text {
+                    margin-top: 20px;
+                }
+                .signature {
+                    margin-top: 30px;
+                    text-align: left;
+                }
+                .amount-summary {
+                    width: 100%;
+                    margin-top: 10px;
+                }
+                .amount-summary td {
+                    padding: 5px;
+                }
+                .bold {
+                    font-weight: bold;
+                }
+                .right-align {
+                    text-align: right;
+                }
+                .highlight {
+                    background-color: yellow;
+                }
+                
+                table tr td {
+                border:1px solid; 
+                }
+            </style>
+        </head>
+        <body>
+            <!-- Header Section -->
+            <div class="header">
+                <table style=" width:100%; border:none; border-collapse: collapse; ">
+                    <tr>
+                        <td style="padding:5px 5px;font-size:12px;text-align:left;border-collapse: collapse;width:50%;">
+                            <img style="width:200px;height:60px" alt="logo" src="{!$Resource.DH_Logo}"/>
+                        </td>
+                        <td style="padding:5px 5px;font-size:16px;border-collapse: collapse;width:50%;">
+                            <b>Quotation</b>
+                            <p>DATE:</p>
+                        </td>
+                    </tr>
+                </table>
+         
+            </div>
+     
+        </body>
+    </html>
+</apex:page>

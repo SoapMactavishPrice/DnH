@@ -1,0 +1,74 @@
+<template>
+    <div if:true={showSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading" size="medium"></lightning-spinner>
+    </div>
+
+    <lightning-modal-header label="Add Accounts"></lightning-modal-header>
+
+    <lightning-modal-body class="modal-body scrollable-body">
+        <template if:true={mainBodyFlag}>
+            <lightning-card variant=" narrow">
+                <lightning-layout multiple-rows>
+                    <lightning-layout-item size="12" small-device-size="4" medium-device-size="4" large-device-size="4"
+                        padding="around-small" style="padding-top: 5px !important; padding-bottom: 2px !important;">
+                        <label>Search</label>
+                        <lightning-input type="search" data-source="searchInputField" value={searchKey}
+                            variant="label-hidden" placeholder="Search Account Here..." onkeyup={showFilteredProducts}
+                            class="searchBox"></lightning-input>
+                    </lightning-layout-item>
+                    <!-- <lightning-layout-item size="12" small-device-size="4" medium-device-size="4" large-device-size="4"
+                        padding="around-small" style="padding-top: 0px !important; padding-bottom: 0px !important;">
+                        <lightning-record-edit-form object-api-name="Account">
+                            <lightning-input-field field-name="Industry" data-name="Industry"
+                                onchange={handlePicklistChangeChange}></lightning-input-field>
+                        </lightning-record-edit-form>
+                    </lightning-layout-item> -->
+                    <!-- <lightning-layout-item size="12" small-device-size="4" medium-device-size="4" large-device-size="4"
+                        padding="around-small" style="padding-top: 0px !important; padding-bottom: 0px !important;">
+                        <lightning-record-edit-form object-api-name="Account">
+                            <lightning-input-field field-name="BillingCity" data-name="BillingCity"
+                                onchange={handlePicklistChangeChange}>
+                            </lightning-input-field>
+                        </lightning-record-edit-form>
+                    </lightning-layout-item> -->
+
+                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+                        large-device-size="12" padding="around-small"
+                        style="padding-top: 0px !important; padding-bottom: 0px !important;">
+                        <lightning-datatable data={ShowTableData} key-field="Id" columns={cols} if:false={showSpinner}
+                            data-id="datatable" selected-rows={selectedProductCode} onrowselection={SelectedProduct}>
+                        </lightning-datatable>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+                        large-device-size="12" style="text-align: center !important;">
+                        <!-- <lightning-button disabled={bDisableFirst} icon-name="utility:jump_to_left" label="First"
+							class="slds-p-horizontal_x-small" alternative-text="first page" onclick={firstPage}></lightning-button> -->
+                        <lightning-button disabled={bDisableFirst} icon-name="utility:chevronleft" label="Previous"
+                            alternative-text="Previous" onclick={previousHandler}></lightning-button>
+                        &nbsp;
+                        <span class="slds-badge slds-badge_lightest" style="margin-right: 10px;margin-left: 10px;">
+                            Page {page} of {totalPage} | Total: {totalRecountCount}
+                        </span>
+                        &nbsp;
+                        <lightning-button disabled={bDisableLast} icon-name="utility:chevronright" label="Next"
+                            alternative-text="Next" onclick={nextHandler} class="slds-p-horizontal_x-small"
+                            icon-position="right"></lightning-button>
+                        <!-- <lightning-button disabled={bDisableLast} icon-name="utility:jump_to_right" label="Last"
+							alternative-text="last page" onclick={lastPage} icon-position="right"></lightning-button> -->
+                    </lightning-layout-item>
+                </lightning-layout>
+            </lightning-card>
+        </template>
+    </lightning-modal-body>
+
+    <lightning-modal-footer class="sticky-footer">
+        <div>
+            <lightning-button label="Cancel" name="Cancel" onclick={closeComponent} class="slds-var-m-right_small">
+            </lightning-button>
+            <lightning-button variant="brand" label="Save" name="Save" onclick={handleSaveData}
+                class="slds-var-m-left_small">
+            </lightning-button>
+        </div>
+    </lightning-modal-footer>
+
+</template>

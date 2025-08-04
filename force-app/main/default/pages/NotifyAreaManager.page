@@ -1,0 +1,15 @@
+<apex:page Controller="NotifyAreaManagerController"  action="{!sendEmail}">
+  
+    <apex:pagemessages />
+    <apex:form >
+        <apex:actionFunction name="jsName" action="{!getsomething}"/>
+    </apex:form>
+    <script>
+function reload() {
+    setTimeout(function(){ jsName(); }, 3000);
+
+}
+
+reload();
+</script>
+</apex:page>

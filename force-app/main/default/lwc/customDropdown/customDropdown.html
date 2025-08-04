@@ -1,0 +1,50 @@
+<template>
+
+    <div if:true={showSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading" size="medium"></lightning-spinner>
+    </div>
+
+    <div class="firstDiv" style="background-color: white; border-radius: 5px; display: block">
+
+        <!-- <label class="slds-form-element__label">{objName}</label> -->
+        <!-- <span style="display: block; padding-left: 5px; padding-bottom: 2px">{objName}</span> -->
+        <lightning-layout style="width: 100%; padding: 5px; border: 0.5px solid #d4d4d4; border-radius: 5px"
+            onclick={handleDropdownClick} horizontal-align="spread">
+            <lightning-layout-item style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">
+                <span title={placeHolder}>{placeHolder}</span>
+                <b class="caret"></b>
+            </lightning-layout-item>
+            <lightning-layout-item>
+                <lightning-icon icon-name={iconName} size="x-small"></lightning-icon>
+            </lightning-layout-item>
+        </lightning-layout>
+
+        <div if:true={masterList.length} class="dropdownContent"
+            style="margin-top: 5px; position: fixed; background-color: white; border-radius: 5px">
+            <div if:true={isDropdownVisible} style="width: inherit">
+                <div onkeyup={handleSearch}>
+                    <lightning-input name="enter-search" type="search" value={searchText} variant="label-hidden"
+                        oncommit={handleSearch}></lightning-input>
+                </div>
+                <div
+                    style="overflow: auto; max-height: 200px; margin-top: 1px; border: 0.5px solid #d4d4d4; border-radius: 5px">
+                    <div for:each={filteredList} for:item="item" key={item.id} class="selectAll">
+                        <lightning-layout multiple-rows="true" vertical-align="center">
+                            <lightning-layout-item class="slds-p-around_xx-small" size="2">
+                                <lightning-input type="checkbox" checked={item.isSelected} onchange={handleSelectItem}
+                                    data-id={item.id} data-selected={item.isSelected} data-title={item.title}>
+                                </lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item class="slds-p-around_xx-small" size="10" title={item.title}
+                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">
+                                {item.title}
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</template>

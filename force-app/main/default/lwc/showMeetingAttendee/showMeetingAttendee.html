@@ -1,0 +1,35 @@
+<template>
+    <lightning-card title="Meeting Attendees">
+        <template if:true={isMobile}>
+            <!-- Mobile View -->
+            <template if:true={attendees}>
+                <ul class="mobile-attendees">
+                    <template for:each={attendees} for:item="attendee">
+                        <li key={attendee.id}>
+                            <p><b>Contact Name : </b>{attendee.Contact_Name__c}</p>
+                             <p><b>Description : </b>{attendee.Meeting_Description__c}</p>
+                             <p><b>Next Follow-Up : </b>{attendee.formattedStartDate}</p>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+            <template if:true={error}>
+                <div class="slds-text-color_error">{error}</div>
+            </template>
+        </template>
+        <template if:false={isMobile}>
+            <!-- Desktop View -->
+            <template if:true={attendees}>
+                <lightning-datatable
+                    data={attendees}
+                    columns={columns}
+                    key-field="id"
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </template>
+            <template if:true={error}>
+                <div class="slds-text-color_error">{error}</div>
+            </template>
+        </template>
+    </lightning-card>
+</template>

@@ -1,0 +1,140 @@
+<template>
+	<div if:true={showSpinner} class="exampleHolder">
+		<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+	</div>
+
+	<lightning-card>
+		<div style="margin-bottom: 15px;">
+			<div style="display: inline-block;">
+				<label style="font-size:16px;margin-left:12px;"><b>Submitted Service 19 (Customer Complaints)</b></label>
+			</div>
+			<div style="display: flex; float: right;">
+				<lightning-button label="Service 19 (Customer Complaints)" slot="actions" icon-name="utility:add"
+					onclick={handlerAddService19} class="slds-m-right_small">
+				</lightning-button>
+			</div>
+		</div>
+		<div style="border-bottom: 1px solid black;"></div>
+		<div style="padding: 15px;">
+			<lightning-layout multiple-rows>
+				<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12"
+					padding="around-small" style="padding-top: 0px !important; display: flex; justify-content: center;">
+					<lightning-input type="search" data-source="searchInputField" onclick={toggleResult} value={searchKey}
+						variant="label-hidden" placeholder="Search" onkeyup={showFilteredProducts} class="searchBox"
+						style="width: 25%;"></lightning-input>
+				</lightning-layout-item>
+				<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12">
+					<lightning-datatable key-field="id" data={submittedServiceData} columns={columns} hide-checkbox-column>
+					</lightning-datatable>
+				</lightning-layout-item>
+				<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12"
+					padding="around-small" style="text-align: center !important;">
+					<!-- <lightning-button disabled={bDisableFirst} icon-name="utility:jump_to_left" label="First"
+							class="slds-p-horizontal_x-small" alternative-text="first page" onclick={firstPage}></lightning-button> -->
+					<lightning-button disabled={bDisableFirst} icon-name="utility:chevronleft" label="Previous"
+						alternative-text="Previous" onclick={previousHandler}></lightning-button>
+					&nbsp;
+					<span class="slds-badge slds-badge_lightest" style="margin-right: 10px;margin-left: 10px;">
+						Page {page} of {totalPage} | Total: {totalRecountCount}
+					</span>
+					&nbsp;
+					<lightning-button disabled={bDisableLast} icon-name="utility:chevronright" label="Next"
+						alternative-text="Next" onclick={nextHandler} class="slds-p-horizontal_x-small"
+						icon-position="right"></lightning-button>
+					<!-- <lightning-button disabled={bDisableLast} icon-name="utility:jump_to_right" label="Last"
+							alternative-text="last page" onclick={lastPage} icon-position="right"></lightning-button> -->
+				</lightning-layout-item>
+			</lightning-layout>
+		</div>
+
+
+	</lightning-card>
+
+	<template if:true={isModalOpen}>
+		<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+			aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container" style="width: 35% !important; max-width: 35rem;">
+				<!-- Modal/Popup Box LWC header here -->
+				<header class="slds-modal__header">
+					<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"
+						onclick={handlerCloseAddService19}>
+						<lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small">
+						</lightning-icon>
+						<span class="slds-assistive-text">Close</span>
+					</button>
+					<h2 id="modal-heading-04" class="slds-text-heading_medium slds-hyphenate">Select Sales Invoice (Customer
+						Complaints)</h2>
+				</header>
+				<div class="slds-modal__content slds-var-p-around_medium" id="modal-content-id-5"
+					style="padding-top: 0px !important">
+					<div style="margin-right: 30px;margin-left:30px;">
+						<div if:true={showSpinner2} class="exampleHolder">
+							<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+						</div>
+						<lightning-card>
+							<lightning-layout multiple-rows>
+								<lightning-layout-item size="12" small-device-size="4" medium-device-size="4" large-device-size="4">
+									<div style="padding-top: 20px;">
+										From Date <br /> (mm/dd/yyyy)
+									</div>
+								</lightning-layout-item>
+								<lightning-layout-item size="12" small-device-size="8" medium-device-size="8" large-device-size="8">
+									<lightning-input type="date" value={fromDateValue} name="fromdate" onchange={handlerDateChange}>
+									</lightning-input>
+								</lightning-layout-item>
+								<lightning-layout-item size="12" small-device-size="4" medium-device-size="4" large-device-size="4">
+									<div style="padding-top: 20px;">
+										To Date <br /> (mm/dd/yyyy)
+									</div>
+								</lightning-layout-item>
+								<lightning-layout-item size="12" small-device-size="8" medium-device-size="8" large-device-size="8">
+									<lightning-input type="date" value={toDateValue} name="todate" onchange={handlerDateChange}>
+									</lightning-input>
+								</lightning-layout-item>
+								<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12"
+									style="padding-top: 15px; display: flex; justify-content: end;">
+									<lightning-button label="Search" onclick={handlerAddService19}>
+									</lightning-button>
+								</lightning-layout-item>
+								<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12"
+									style="padding-top: 15px">
+									<lightning-combobox label="Select Invoice No" name="invoiceno" value={invoiceNumberValue}
+										options={selectInvoiceNo_Options} onchange={handlerComboboxChange} placeholder="Select">
+									</lightning-combobox>
+								</lightning-layout-item>
+								<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12"
+									style="padding-top: 15px">
+									<lightning-combobox label="Select Sales Line Item-Variant" name="saleslineitemvariant"
+										value={salesLIVariantValue} options={salesLIVariant_Options} onchange={handlerComboboxChange}
+										placeholder="Select">
+									</lightning-combobox>
+								</lightning-layout-item>
+								<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12"
+									style="padding-top: 15px">
+									<lightning-combobox label="Select Batch" name="selectbatch" value={selectedBatchValue}
+										options={selectBatch_Options} onchange={handlerComboboxChange} placeholder="Select">
+									</lightning-combobox>
+								</lightning-layout-item>
+								<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12"
+									style="text-align: center; padding-top: 20px">
+									<lightning-button label="Back" title="Non-primary action" onclick={handlerCloseAddService19}
+										class="slds-m-left_x-small"></lightning-button>
+									<lightning-button variant="Brand" label="Proceed" title="Destructive action with a lighter look"
+										class="slds-m-left_x-small"></lightning-button>
+								</lightning-layout-item>
+							</lightning-layout>
+						</lightning-card>
+					</div>
+				</div>
+
+				<!-- <footer class="slds-modal__footer">
+          <button class="slds-button slds-button_neutral" onclick={navigateToRecordPage} title="NO">Cancel</button>
+          <button class="slds-button slds-button_brand" onclick={handleSelectedTransferRequestDetail}
+            title="OK">Save</button>
+        </footer> -->
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+
+</template>

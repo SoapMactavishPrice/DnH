@@ -1,0 +1,9 @@
+<aura:component implements="lightning:isUrlAddressable,force:hasRecordId,flexipage:availableForAllPageTypes,lightning:actionOverride" >
+    <aura:attribute name="refRecordId" type="String" />
+    <aura:attribute name="isEnquiryVisible" type="Boolean" default="false" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+     <!-- Conditionally render the child component -->
+     <aura:if isTrue="{!v.isEnquiryVisible}">
+        <c:createService19LWC sampReqRecId="{!v.refRecordId}" />
+    </aura:if>
+</aura:component>

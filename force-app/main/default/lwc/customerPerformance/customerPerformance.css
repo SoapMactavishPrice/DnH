@@ -1,0 +1,83 @@
+/* Target table and add light column borders */
+table {
+  border-collapse: collapse;
+  /* Ensures borders collapse into one line */
+  width: 100%;
+  /* Makes the table take full width */
+}
+
+th,
+td {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  /* Very light border color */
+  padding: 4px;
+  /* Adds space around the text */
+  text-align: center;
+  /* Optional: Center the content in the cells */
+}
+
+/* Optional: Add a hover effect for better visual feedback */
+tr:hover {
+  background-color: #f9f9f9;
+}
+
+.darker {
+  background-color: #dcdcdc;
+  /* slightly darker than default #f3f3f3 */
+  color: #181818;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.table-header-scroll {
+  overflow-x: auto;
+}
+
+.table-body-scroll {
+  max-height: 400px;
+  /* adjust as needed */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Sync column widths */
+/* .table-header-scroll table,
+.table-body-scroll table {
+  table-layout: fixed;
+  width: 100%;
+} */
+
+.table-container-horizontal {
+  overflow-x: auto;
+  /* horizontal scroll */
+}
+
+.table-container-vertical {
+  max-height: 400px;
+  /* adjust as needed */
+  overflow-y: auto;
+  /* vertical scroll */
+}
+
+/* Freeze header rows */
+.custom-table thead th {
+  position: sticky;
+  top: 0;
+  background: #f3f3f3;
+  z-index: 2;
+}
+
+.custom-table tbody tr {
+  /* position: sticky; */
+  /* top: 0; */
+  /* background: #f3f3f3; */
+  /* z-index: 2; */
+}
+
+.stck-header .stck-body {
+  background-color: #f3f3f3;
+  position: sticky;
+  left: 0;
+}

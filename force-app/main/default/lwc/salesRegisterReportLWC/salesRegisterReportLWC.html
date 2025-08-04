@@ -1,0 +1,33 @@
+<template>
+    <div if:true={showSpinner} class="exampleHolder">
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </div>
+    <lightning-card>
+        <lightning-record-edit-form object-api-name="Enquiry__c">
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="3" small-device-size="3" medium-device-size="3" large-device-size="3"
+                    style="padding: 17px 10px;">
+                    <label for="account">Customer</label>
+                    <lightning-input-field class="customerno" field-name="Account__c" variant="label-hidden"
+                        data-id="account"></lightning-input-field>
+                </lightning-layout-item>
+                <lightning-layout-item size="2" small-device-size="2" medium-device-size="2" large-device-size="2"
+                    padding="around-small">
+                    <lightning-input name="startdate" type="date" label="Start Date" value={selectedDate}
+                        onchange={handleDateChange}></lightning-input>
+                </lightning-layout-item>
+                <lightning-layout-item size="2" small-device-size="2" medium-device-size="2" large-device-size="2"
+                    padding="around-small">
+                    <lightning-input name="enddate" type="date" label="End Date" value={selectedDate}
+                        onchange={handleDateChange}></lightning-input>
+                </lightning-layout-item>
+                <lightning-layout-item size="2" small-device-size="2" medium-device-size="2" large-device-size="2"
+                    padding="around-small" style="padding-top: 33px !important;">
+                    <lightning-button variant="Brand" label="Submit" type="button" title="Primary action"
+                        class="slds-m-left_x-small" onclick={handleSearch}></lightning-button>
+                </lightning-layout-item>
+            </lightning-layout>
+        </lightning-record-edit-form>
+    </lightning-card>
+
+</template>

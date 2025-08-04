@@ -1,0 +1,140 @@
+<template>
+    <template if:true={showSpinner}>
+        <lightning-spinner variant="brand"></lightning-spinner>
+    </template>
+
+    <lightning-quick-action-panel header="Edit Enquiry Line Item" style="min-width: 83%;">
+        <div style="width:100%">
+            <div if:true={isdata}><label class="slds-align_absolute-center"><b>Customer Ledger Entry Not
+                        found.</b></label>
+            </div>
+            <div if:false={isdata} style="overflow-x: auto !important;">
+                <table
+                    class="slds-table  tableCls_customer_ledger slds-table_bordered slds-border_left slds-border_right ">
+                    <thead>
+                        <tr>
+                            <th class="" scope="col"
+                                style="text-align:center;background-color: #b12327; color: #fff;width: 1%;">
+                                <strong>Item Name</strong>
+
+                            </th>
+
+                            </th>
+                            <th class="" scope="col" style="background-color: #b12327; color: #fff;width:15%">
+                                <div class="text-align:center;slds-truncate" title="Case Number">
+                                    <strong><label style="color:red">*</label>Quantity</strong>
+                                </div>
+                            </th>
+                            <!-- <th class="" scope="col" style="background-color: #b12327; color: #fff;">
+									<div class="slds-truncate" title="Case Number">Subject</div>
+								</th> -->
+
+
+
+                            <th class="" scope="col" style="background-color: #b12327; color: #fff;width:15%">
+                                <div class="text-align:center;slds-truncate" title="Case Number">
+                                    <strong><label style="color:red">*</label>Sales Price</strong>
+                                </div>
+                            </th>
+
+                            <th class="" scope="col" style="background-color: #b12327; color: #fff;">
+                                <div class="text-align:center;slds-truncate" title="Case Number"><strong>Status</strong>
+                                </div>
+                            </th>
+
+                            <th class="" scope="col" style="background-color: #b12327; color: #fff;">
+                                <div class="text-align:center;slds-truncate" title="Case Number">
+                                    <strong>Reason for Lost Enquiry</strong>
+                                </div>
+                            </th>
+
+                            <th class="" scope="col" style="background-color: #b12327; color: #fff;">
+                                <div class="text-align:center;slds-truncate" title="Case Number">
+                                    <strong>Competitor</strong>
+                                </div>
+                            </th>
+
+                            <th class="" scope="col" style="background-color: #b12327; color: #fff; width: 20%;">
+                                <div class="text-align:center;slds-truncate" title="Case Number">
+                                    <strong>Competitor's Products</strong>
+                                </div>
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={tableData} for:index="index" for:item="item">
+                            <tr key={item.Id}>
+                                <td>{item.Item_Master__r.Name}</td>
+                                <td>
+                                    <lightning-input variant="label-hidden" onchange={handleChange} data-label="Qty__c"
+                                        data-id={item.Id} value={item.Qty__c}></lightning-input>
+                                </td>
+
+                                <td>
+                                    <lightning-input variant="label-hidden" onchange={handleChange} data-id={item.Id}
+                                        data-label="Dealer_Rate__c" value={item.Dealer_Rate__c}></lightning-input>
+                                </td>
+                                <td>
+
+                                    <!-- <template> -->
+                                    <lightning-combobox label="Select an Option" options={status} variant="label-hidden"
+                                        data-id={item.Id} onchange={handleChange} placeholder="Select an option..."
+                                        data-label="Status__c" value={item.Status__c}>
+                                    </lightning-combobox>
+
+                                    <!-- <p>Your selected option: {value}</p> -->
+                                    <!-- </template> -->
+
+
+                                    <!-- <lightning-input variant="label-hidden" onchange={handleChange} data-label="handleChange" -->
+                                    <!-- value={item.Status__c}></lightning-input> -->
+                                </td>
+                                <td>
+                                    <lightning-combobox label="Select an Option" options={reason} variant="label-hidden"
+                                        data-id={item.Id} data-label="Reason_for_lost_enquiry__c"
+                                        onchange={handleChange} placeholder="Select an option..."
+                                        value={item.Reason_for_lost_enquiry__c} disabled={item.reasondisable}>
+                                    </lightning-combobox>
+
+                                    <!-- <lightning-input variant="label-hidden" onchange={handleChange}
+                                    data-label="Reason_for_lost_enquiry__c" value={item.Reason_for_lost_enquiry__c}>
+                                </lightning-input> -->
+                                </td>
+                                <td>
+
+                                    <lightning-combobox name="Competitor" variant="label-hidden"
+                                        placeholder="Select Comprtitor" data-label="Competitor__c" data-index={index}
+                                        value={item.Competitor__c} data-id={item.Id} options={ComprtitormasterOptions}
+                                        onchange={handleCompetitorChange} disabled={item.compititordisable}>
+                                    </lightning-combobox>
+                                </td>
+                                <td style="position: absolute;">
+                                    <c-competitor-product-lookup icon-name="standard:account"
+                                        data-label="Competitor_Product__c" default-record-id={item.Competitor_Product__c} s-object-api-name="Competitor_Product__c"
+                                        label="Competitor Product" rec-id={item.Competitor__c} data-id={item.Id}
+                                        onlookupupdate={lookupRecord} placeholder="Select Competitor Product"
+                                        disabled={item.compititordisable}>
+                                    </c-competitor-product-lookup>
+                                    <!-- <lightning-input variant="label-hidden" onchange={handleChange}
+                                    data-label="Reason_for_lost_enquiry__c" value={item.Reason_for_lost_enquiry__c}>
+                                </lightning-input> -->
+                                </td>
+
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+
+            <footer class="slds-align_absolute-center slds-p-around_medium">
+                <lightning-button label="Cancel" style="margin-right: 10px;" variant="neutral"
+                    onclick={closeRecordAction}>
+                </lightning-button>
+                <lightning-button label="Save" variant="brand" onclick={Save}>
+                </lightning-button>
+            </footer>
+        </div>
+
+    </lightning-quick-action-panel>
+</template>

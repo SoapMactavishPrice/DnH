@@ -1,0 +1,267 @@
+<template>
+    <lightning-quick-action-panel header='New Customer Application Matrix' if:true={isOpen}>
+        <template if:true={showSpinner}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+
+        <template for:each={arrData} for:item="menuItem" for:index="index">
+            <lightning-record-edit-form object-api-name="Customer_Application_Matrix__c" key={menuItem.Id}>
+                <lightning-layout multiple-rows="true" class="slds-m-bottom_x-small" style="border: 1px solid;
+    background: oldlace;border-radius: 7px;">
+                    <lightning-layout-item size="2" class="slds-p-around_small">
+                        <label>Emplyoyee Name</label>
+                        <lightning-input-field field-name="Employee_Name__c" value={menuItem.empId} disabled
+                            variant="label-hidden">
+                        </lightning-input-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" class="slds-p-around_small">
+                        <label>Customer</label>
+                        <lightning-input-field field-name="Customer__c" value={menuItem.customerId} disabled
+                            variant="label-hidden">
+                        </lightning-input-field>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size="2" class="slds-p-around_small">
+                        <label>Industry</label>
+                        <c-lookup-component object-api-name="Industry__c" icon-name="standard:account"
+                            rowid={menuItem.Id} index={menuItem.Id} index_x={menuItem.Id} style="width: 180"
+                            default-record-id={menuItem.industryId} return-fields="OwnerId,Owner.Name"
+                            sort-column="Name" display-fields="" query-fields="['Name']"
+                            onrecordselection={onRMItemChange} onfocus={onRMItemChange}>
+                        </c-lookup-component>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size="2" class="slds-p-around_small">
+                        <label>Department</label>
+                        <!-- <lightning-input-field field-name="Employee_Name__c" value={menuItem.empId}
+                            variant="label-hidden">
+                        </lightning-input-field> -->
+
+                        <c-lookup-component object-api-name="Department__c" icon-name="standard:account"
+                            rowid={menuItem.Id} index={menuItem.Id} index_x={menuItem.Id} style="width: 180"
+                            industry-id={menuItem.industryId} return-fields="OwnerId,Owner.Name" sort-column="Name"
+                            display-fields="" query-fields="['Name']" onrecordselection={onDeptChange}
+                            onfocus={onDeptChange}>
+                        </c-lookup-component>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size="2" class="slds-p-around_small">
+                        <label>New Application</label>
+                        <lightning-input-field field-name="New_Application__c" value={menuItem.newApp}
+                            data-index={menuItem.Id} onchange={handleChange} data-name="newApp" variant="label-hidden">
+                        </lightning-input-field>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size="2" class="slds-p-around_small">
+                        <label class="">Application</label>
+                        <!-- <lightning-input-field field-name="Employee_Name__c" value={menuItem.empId}
+                            variant="label-hidden">
+                        </lightning-input-field> -->
+                        <c-lookup-component object-api-name="Application__c" icon-name="standard:account"
+                            rowid={menuItem.Id} index={menuItem.Id} index_x={menuItem.Id} style="width: 180"
+                            return-fields="OwnerId,Owner.Name" sort-column="Name" display-fields=""
+                            query-fields="['Name']" industry-id={menuItem.industryId} dept-id={menuItem.deptId}
+                            onrecordselection={onAppChange} onfocus={onAppChange}>
+                        </c-lookup-component>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size="1" class="slds-p-around_small widthsize">
+
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" class="slds-p-around_small slds-text-title_bold widthsize">
+                        Company Name
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" class="slds-p-around_small slds-text-title_bold widthsize">
+                        Product Brand
+                    </lightning-layout-item>
+                    <lightning-layout-item size="1" class="slds-p-around_small slds-text-title_bold widthsize">
+                        Product Category
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" class="slds-p-around_small slds-text-title_bold widthsize">
+                        Product Name
+                    </lightning-layout-item>
+                    <lightning-layout-item size="1" class="slds-p-around_small slds-text-title_bold widthsize">
+                        Product Size
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size="1" class="slds-p-around_small slds-text-title_bold widthsize">
+
+                        Alloy Kgs/Annum
+                    </lightning-layout-item>
+                    <lightning-layout-item size="1" class="slds-p-around_small slds-text-title_bold widthsize">
+                        Potential (Lakhs)
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size="1" class="slds-p-around_small slds-text-title_bold widthsize">
+                        Action
+                    </lightning-layout-item>
+                    <lightning-layout-item size="1" class="slds-p-around_small widthsize">
+                        D&H Product
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" class="slds-p-around_small widthsize">
+                        <lightning-input-field field-name="Company_Name__c" disabled variant="label-hidden">
+                        </lightning-input-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" class="slds-p-around_small widthsize">
+                        <lightning-input-field field-name="Product_Brand__c" data-index={menuItem.Id}
+                            onchange={handleChange} data-name="Product_Brand" variant="label-hidden">
+                        </lightning-input-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="1" class="slds-p-around_small widthsize">
+                        <lightning-input-field field-name="Product_Category__c" data-index={menuItem.Id}
+                            onchange={handleChange} data-name="Product_Category" variant="label-hidden">
+                        </lightning-input-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" class="slds-p-around_small widthsize">
+                        <lightning-input-field field-name="Product_Name__c" data-index={menuItem.Id}
+                            onchange={handleChange} data-name="Product_Name" variant="label-hidden">
+                        </lightning-input-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="1" class="slds-p-around_small widthsize">
+                        <lightning-input-field field-name="Product_Size__c" data-index={menuItem.Id}
+                            onchange={handleChange} data-name="Product_Size" variant="label-hidden">
+                        </lightning-input-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="1" class="slds-p-around_small widthsize">
+                        <lightning-input-field field-name="Alloy_Kgs_Annum__c" data-index={menuItem.Id}
+                            class="custom-input-field" value={menuItem.alloy} onchange={handleChange} data-name="alloy"
+                            variant="label-hidden">
+                        </lightning-input-field>
+
+
+                        <!-- <div if:true={menuItem.alloy_error} class="common-error error-div"
+                            style="border-bottom: 2px solid red;"></div>
+                        <div if:true={menuItem.alloy_error} style="display:flex;justify-content: space-between;">
+                            <label class="trade-License-number error-msg" style="color: red;
+    font-size: 10px;
+    font-weight: bold;">
+                                Enter value greater than Zero</label>
+
+                        </div> -->
+                    </lightning-layout-item>
+                    <lightning-layout-item size="1" class="slds-p-around_small widthsize">
+                        <lightning-input-field field-name="Potential_Lakhs__c" data-index={menuItem.Id}
+                            value={menuItem.potential} onchange={handleChange} data-name="potential"
+                            variant="label-hidden">
+                        </lightning-input-field>
+                        <!-- <div if:true={menuItem.poten_error} class="common-error error-div"
+                            style="border-bottom: 2px solid red;"></div>
+                        <div if:true={menuItem.poten_error} style="display:flex;justify-content: space-between;">
+                            <label class="trade-License-number error-msg" style="color: red;
+    font-size: 10px;
+    font-weight: bold;">
+                                Enter value greater than Zero</label>
+
+                        </div> -->
+
+                    </lightning-layout-item>
+
+
+                    <lightning-layout-item size="1" class="slds-p-around_small widthsize ">
+                        <lightning-icon icon-name="action:new" data-index={index} access-key={menuItem.Id} id={index}
+                            alternative-text="Add Row" size="x-small" onclick={addRow}>
+                        </lightning-icon>
+                        <lightning-icon icon-name="action:delete" class="slds-m-left_xx-small" access-key={menuItem.Id}
+                            data-id={menuItem.Id} alternative-text="Delete Row" size="x-small" data-index={index}
+                            onclick={removeRow}>
+                        </lightning-icon>
+
+                    </lightning-layout-item>
+
+
+                    <lightning-layout-item size="1" class="slds-p-around_small widthsize">
+                        Competitor Name
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" class="slds-p-around_small widthsize">
+                        <lightning-input-field field-name="Competitor_Name__c" data-index={menuItem.Id}
+                            onchange={handleChange} data-name="com_label" variant="label-hidden">
+                        </lightning-input-field>
+                        <!-- <div if:true={menuItem.com_Name_error} class="common-error error-div"
+                            style="border-bottom: 2px solid red;"></div>
+                        <div if:true={menuItem.com_Name_error} style="display:flex;justify-content: space-between;">
+                            <label class="trade-License-number error-msg" style="color: red;
+    font-size: 10px;
+    font-weight: bold;">
+                                Please Fill Competitor Name</label>
+
+                        </div> -->
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" class="slds-p-around_small widthsize">
+                        <lightning-input-field field-name="Competitor_Product_Brand__c" data-index={menuItem.Id}
+                            onchange={handleChange} data-name="com_Product_Brand" variant=" label-hidden">
+                        </lightning-input-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="1" class="slds-p-around_small widthsize">
+                        <lightning-input-field field-name="Competitor_Product_Category__c" data-index={menuItem.Id}
+                            onchange={handleChange} data-name="com_Product_Category" variant="label-hidden">
+                        </lightning-input-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" class="slds-p-around_small widthsize">
+                        <lightning-input-field field-name="Competitor_Product_Name__c" data-index={menuItem.Id}
+                            onchange={handleChange} data-name="com_Product_Name" variant="label-hidden">
+                        </lightning-input-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="1" class="slds-p-around_small widthsize">
+                        <lightning-input-field field-name="Competitor_Product_Size__c" data-index={menuItem.Id}
+                            onchange={handleChange} data-name="com_Product_Size" variant="label-hidden">
+                        </lightning-input-field>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size="1" class="slds-p-around_small widthsize">
+                        <lightning-input-field field-name="Competitor_Alloy_Kgs_Annum__c" data-index={menuItem.Id}
+                            value={menuItem.com_alloy} onchange={handleChange} data-name="com_alloy"
+                            variant="label-hidden">
+                        </lightning-input-field>
+                        <!-- <div if:true={menuItem.com_alloy_error} class="common-error error-div"
+                            style="border-bottom: 2px solid red;"></div>
+                        <div if:true={menuItem.com_alloy_error} style="display:flex;justify-content: space-between;">
+                            <label class="trade-License-number error-msg" style="color: red;
+    font-size: 10px;
+    font-weight: bold;">
+                                Enter value greater than Zero</label>
+
+                        </div> -->
+                    </lightning-layout-item>
+                    <lightning-layout-item size="1" class="slds-p-around_small widthsize">
+                        <lightning-input-field field-name="Competitor_Potential_Lakhs__c" data-index={menuItem.Id}
+                            value={menuItem.com_potential} onchange={handleChange} data-name="com_potential"
+                            variant=" label-hidden">
+                        </lightning-input-field>
+                        <!-- <div if:true={menuItem.com_poten_error} class="common-error error-div"
+                            style="border-bottom: 2px solid red;"></div>
+                        <div if:true={menuItem.com_poten_error} style="display:flex;justify-content: space-between;">
+                            <label class="trade-License-number error-msg" style="color: red;
+    font-size: 10px;
+    font-weight: bold;">
+                                Enter value greater than Zero</label>
+
+                        </div> -->
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size="1" class="slds-p-around_small widthsize">
+
+                    </lightning-layout-item>
+
+
+                </lightning-layout>
+            </lightning-record-edit-form>
+        </template>
+
+
+        <div slot='footer'>
+
+
+            <div style="width:98%;" class="slds-m-top_small">
+                <div style="display:flex; width:97%">
+                    <div class="slds-align_absolute-center">
+                        <lightning-button onclick={goBackToRecord} label="Cancel"></lightning-button>
+                        <lightning-button class="slds-m-left_small" variant="brand" onclick={saveRecord}
+                            label="Save"></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </lightning-quick-action-panel>
+
+</template>

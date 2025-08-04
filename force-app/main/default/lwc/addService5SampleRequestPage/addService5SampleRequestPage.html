@@ -1,0 +1,468 @@
+<template>
+	<div if:true={showSpinner} class="exampleHolder">
+		<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+	</div>
+	<lightning-card>
+		<div style="padding-left: 5px !important; font-size: 20px !important; font-weight: 500;">
+			Create Service 5-(Sample Request)
+		</div>
+		<div style="border-bottom: 1px solid black;"></div>
+		<div style="padding: 10px;">
+			<lightning-record-edit-form object-api-name="Service_5_Sample_Request__c" record-id={sampReqRecId}
+				data-id="form1" onsuccess={handleMainOnSuccess} onsubmit={handleMainOnSubmit}
+				onerror={handleErrorSubmit}>
+				<lightning-layout multiple-rows>
+					<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5"
+						style="padding: 10px 0 0 10px;">
+						<!-- <lightning-input-field name="Document No" value={displayLabel}
+                                style="padding-bottom: 10px !important;" read-only disabled>
+                            </lightning-input-field> -->
+						<lightning-input-field field-name="Name" label="Document No" value={displayLabel}
+							disabled></lightning-input-field>
+
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="1" medium-device-size="1" large-device-size="1">
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5">
+						<lightning-input-field name="Document Date" field-name="Date__c" style="padding: 10px 0 0 10px;"
+							value={service5Date} disabled>
+						</lightning-input-field>
+					</lightning-layout-item>
+					<!-- <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12"
+                            style="border-bottom: 1px solid black; border-top: 1px solid black;">
+                            <div style="padding: 5px 0 5px 0; font-size: 16px; color: red;">
+                             Items
+                              <div class="button-container" style="display: flex; justify-content: flex-end;">
+                            <lightning-button variant="brand" label="Item+" title="Primary action" onclick={handleNewItemClick} class="slds-m-right_x-small item-button"></lightning-button>
+                            </div> -->
+					<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+						large-device-size="12"
+						style="border-bottom: 1px solid black; border-top: 1px solid black; display: flex; justify-content: space-between;">
+						<div style="padding: 8px 0 5px 0; font-size: 16px; color: red;">
+							Items
+						</div>
+						<div style="padding: 5px 0 5px 0;">
+							<lightning-button label="Item+" variant="Brand" slot="actions" icon-name="utility:add"
+								onclick={handleNewItemClick} class="slds-m-right_small">
+							</lightning-button>
+						</div>
+					</lightning-layout-item>
+
+
+					<template if:true={NewProductListLength}>
+						<template if:false={isMobile}>
+							<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+								large-device-size="12" padding="around-small" style="padding-top: 0px !important;">
+								<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-m-top_large">
+									<thead>
+										<tr class="slds-line-height_reset">
+											<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+												<div class="slds-truncate" title="Sr.No.">Sr.No.</div>
+											</th>
+											<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+												<div class="slds-truncate" title="TDC/TPS No">Item category</div>
+											</th>
+											<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+												<div class="slds-truncate" title="Revision">Item No</div>
+											</th>
+											<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+												<div class="slds-truncate" title="Unit Of Measure">Description</div>
+											</th>
+											<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+												<div class="slds-truncate" title="Quantity">Size</div>
+											</th>
+											<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+												<div class="slds-truncate" title="Quantity">Brand Name</div>
+											</th>
+											<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+												<div class="slds-truncate" title="Field Staff TDC Remark">Quantity</div>
+											</th>
+											<!-- <th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+												<div class="slds-truncate" title="Field Staff TDC Remark">UOM</div>
+											</th> -->
+											<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+												<div class="slds-truncate" title="Field Staff TDC Remark">Potential Of
+													Business</div>
+											</th>
+											<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+												<div class="slds-truncate" title="Field Staff TDC Remark">Appliaction
+													Details</div>
+											</th>
+											<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+												<div class="slds-truncate" title="Field Staff TDC Remark">Special
+													Properties
+												</div>
+											</th>
+											<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+												<div class="slds-truncate" title="Field Staff TDC Remark">Remarks</div>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<template for:each={NewProductList} for:item="ail" for:index="Index">
+											<tr key={ail.SrNo}>
+												<th scope="col">
+													<div class="slds-truncate" title="Name">{ail.SrNo}</div>
+												</th>
+												<th scope="col">
+													<div class="slds-truncate" title="Name"
+														if:true={ail.Item_Category_Name}>
+														{ail.Item_Category_Name}
+													</div>
+												</th>
+												<th scope="col">
+													<div class="slds-truncate" title="Name"
+														if:true={ail.Item_Number__c}>
+														{ail.Item_Number__c}
+													</div>
+												</th>
+												<th scope="col">
+													<div class="slds-truncate" title="Name"
+														if:true={ail.Description__c}>
+														{ail.Description__c}
+													</div>
+												</th>
+												<th scope="col">
+													<div class="slds-truncate" title="Name" if:true={ail.SR_Size_Name}>
+														{ail.SR_Size_Name}
+													</div>
+												</th>
+												<th scope="col">
+													<div class="slds-truncate" title="Name" if:true={ail.SR_Brand_Name}>
+														{ail.SR_Brand_Name}
+													</div>
+												</th>
+												<th scope="col">
+													<div class="slds-truncate" title="Name" if:true={ail.Quantity_2__c}>
+														{ail.Quantity_2__c}
+													</div>
+												</th>
+												<!-- <th scope="col">
+													<div class="slds-truncate" title="Name" if:true={ail.UOM__c}>
+														{ail.UOM__c}
+													</div>
+												</th> -->
+												<th scope="col">
+													<div class="slds-truncate" title="Name"
+														if:true={ail.Potential_Of_Business__c}>
+														{ail.Potential_Of_Business__c}
+													</div>
+												</th>
+												<th scope="col">
+													<div class="slds-truncate" title="Name"
+														if:true={ail.Application_Details__c}>
+														{ail.Application_Details__c}
+													</div>
+												</th>
+												<th scope="col">
+													<div class="slds-truncate" title="Name"
+														if:true={ail.Special_Properties__c}>
+														{ail.Special_Properties__c}
+													</div>
+												</th>
+												<th scope="col">
+													<div class="slds-truncate" title="Name" if:true={ail.Remarks__c}>
+														{ail.Remarks__c}
+													</div>
+												</th>
+												<th style="width: 5%; padding-top: 10px;">
+													<lightning-icon icon-name="action:edit" data-index={Index}
+														alternative-text="Success!" variant="success" title="Edit Row"
+														onclick={handleEditRow} style="margin-right: 10px;"
+														size="x-small"></lightning-icon>
+													<lightning-icon icon-name="action:delete" data-index={Index}
+														alternative-text="Delete!" variant="success" title="Delete Row"
+														onclick={handleRemoveRow} size="x-small"></lightning-icon>
+												</th>
+											</tr>
+										</template>
+									</tbody>
+								</table>
+							</lightning-layout-item>
+						</template>
+						<template if:true={isMobile}>
+							<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+								large-device-size="12" padding="around-small" style="padding-top: 0px !important;">
+								<div class="slds-grid slds-wrap">
+									<template for:each={NewProductList} for:item="ail" for:index="Index">
+										<div key={ail.SrNo} class="slds-col slds-size_1-of-1 slds-p-around_small">
+											<lightning-card title={ail.Item_Number__c} icon-name="standard:product">
+												<div class="slds-card__body slds-card__body_inner">
+													<p><strong>Item Category:</strong> {ail.Item_Category_Name}</p>
+													<p><strong>Item No:</strong> {ail.Item_Number__c}</p>
+													<p><strong>Description:</strong> {ail.Description__c}</p>
+													<p><strong>Brand Name:</strong> {ail.SR_Brand_Name}</p>
+													<p><strong>Quantity:</strong> {ail.Quantity_2__c}</p>
+													<p><strong>Potential of Business:</strong>
+														{ail.Potential_Of_Business__c}</p>
+													<p><strong>Application Details:</strong>
+														{ail.Application_Details__c}</p>
+													<p><strong>Special Properties:</strong> {ail.Special_Properties__c}
+													</p>
+													<p><strong>Remarks:</strong> {ail.Remarks__c}</p>
+												</div>
+												<div class="slds-card__footer">
+													<lightning-button-icon icon-name="action:edit" data-index={Index}
+														alternative-text="Edit Row" title="Edit Row"
+														onclick={handleEditRow} variant="border-filled" size="small">
+													</lightning-button-icon>
+													<lightning-button-icon icon-name="action:delete" data-index={Index}
+														alternative-text="Delete Row" title="Delete Row"
+														onclick={handleRemoveRow} variant="destructive" size="small">
+													</lightning-button-icon>
+												</div>
+											</lightning-card>
+										</div>
+									</template>
+								</div>
+							</lightning-layout-item>
+						</template>
+					</template>
+					<!-- </div>
+                </lightning-layout-item> -->
+
+					<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5"
+						style="padding: 10px 0 0 10px;">
+						<lightning-input-field name="Customer Name." field-name="Customer_Name__c" data-id="customerno"
+							required>
+						</lightning-input-field>
+						<lightning-input-field name="Address 1:" field-name="Address_1__c" max-length="49" required>
+						</lightning-input-field>
+						<lightning-input-field name="City:" field-name="City_Name__c" required>
+						</lightning-input-field>
+						<lightning-input-field name="Contact No" field-name="Contact_No__c" required>
+						</lightning-input-field>
+						<lightning-input-field name="Remark" field-name="Remark__c" maxlength="49">
+						</lightning-input-field>
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="1" medium-device-size="1" large-device-size="1">
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5"
+						style="padding: 10px 0 0 10px;">
+						<lightning-input-field name="Contact Person Name" field-name="Contact_Person_Name__c"
+							maxlength="49" required>
+						</lightning-input-field>
+						<lightning-input-field name="Address 2" field-name="Address_2__c" maxlength="49">
+						</lightning-input-field>
+						<lightning-input-field name="Post Code" field-name="Postal_Code__c" required>
+						</lightning-input-field>
+						<lightning-input-field name="Mode of Dispatch" field-name="Mode_of_Dispatch__c" required>
+						</lightning-input-field>
+						<div style="display: flex; align-items: center; justify-content: space-between;">
+							<label>Attachment</label>
+							<lightning-input type="file" accept={acceptedFormats} onchange={handleMainFileUpload}>
+							</lightning-input>
+							<!-- {doc_MainFileName} -->
+						</div>
+						<br />
+						<ul>
+							<template for:each={doc_MainFileArray} for:item="file">
+								<li style="text-align: center;" key={file.doc_MainFileName}>{file.doc_MainFileName}</li>
+							</template>
+						</ul>
+					</lightning-layout-item>
+
+
+					<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+						large-device-size="12" style="text-align: center;">
+
+						<lightning-button variant="Brand" label="Save" type="button" title="Primary action"
+							class="slds-m-left_x-small" data-btnname="savebtn"
+							onclick={handleMainOnSubmit}></lightning-button>
+						<lightning-button variant="Brand" label="Submit" type="button" title="Primary action"
+							class="slds-m-left_x-small" data-btnname="submitbtn"
+							onclick={handleMainOnSubmit}></lightning-button>
+
+						<lightning-button variant="destructive-text" label="Cancel"
+							title="Destructive action with a lighter look" onclick={handleMainClick}
+							class="slds-m-left_x-small"></lightning-button>
+					</lightning-layout-item>
+
+
+				</lightning-layout>
+			</lightning-record-edit-form>
+		</div>
+	</lightning-card>
+	<template if:true={isnewproductmodelOpen}>
+		<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+			aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container" style="width: 75% !important; max-width: 80rem;">
+				<!-- Modal/Popup Box LWC header here -->
+				<header class="slds-modal__header">
+					<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+						title="Close" onclick={handleCloseAddNewItems}>
+						<lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+							size="small">
+						</lightning-icon>
+						<span class="slds-assistive-text">Close</span>
+					</button>
+					<h2 id="modal-heading-04" class="slds-text-heading_medium slds-hyphenate">Add Item</h2>
+				</header>
+				<div class="slds-modal__content slds-var-p-around_medium" id="modal-content-id-5"
+					style="padding-top: 0px !important">
+					<div style="margin-right: 30px;margin-left:30px;">
+						<div if:true={showSpinner2} class="exampleHolder">
+							<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+						</div>
+						<lightning-card>
+							<lightning-record-edit-form object-api-name="Sample_Request_Product__c">
+								<lightning-layout multiple-rows>
+
+									<lightning-layout-item size="12" small-device-size="5" medium-device-size="5"
+										large-device-size="5" style="padding: 10px 0 0 10px;">
+										<div
+											style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+											<!-- <label>Item Category Code</label> -->
+											<lightning-combobox name="Item Category Code" label="Item Category Code"
+												data-name="itemcategorycode"
+												value={modalData.Sample_Request_Item_Category_Code__c}
+												placeholder="Select Category" options={itemcategoryCodeOptions}
+												onchange={handleOnChange} style="width: 67%;" variant="label-inline">
+											</lightning-combobox>
+										</div>
+										<div
+											style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+											<!-- <label>Item No</label> -->
+											<lightning-combobox name="Item No" label="Item No" data-name="itemno"
+												value={modalData.Item_No__c} placeholder="Select Item"
+												options={itemMasterOptions} onchange={handleOnChange}
+												style="width: 67%;" variant="label-inline">
+											</lightning-combobox>
+										</div>
+										<lightning-input-field name="Description" field-name="Description__c"
+											value={modalData.Description__c} onchange={handleOnChange}>
+										</lightning-input-field>
+										<div
+											style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+											<!-- <label>Qty Type</label> -->
+											<lightning-combobox name="Qty Type" label="Qty Type" data-name="qtytype"
+												value={modalData.Qty_Type_2__c} placeholder="Select Qty Type"
+												options={qtyTypeOptions} onchange={handleOnChange} style="width: 67%;"
+												variant="label-inline">
+											</lightning-combobox>
+										</div>
+										<div
+											style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+											<!-- <label>Quantity</label> -->
+											<lightning-combobox name="Quantity" label="Quantity" data-name="quantity"
+												value={modalData.Quantity_2__c} placeholder="Select Quantity"
+												options={quantityOptions} onchange={handleOnChange} style="width: 67%;"
+												variant="label-inline">
+											</lightning-combobox>
+										</div>
+
+									</lightning-layout-item>
+
+									<lightning-layout-item size="12" small-device-size="1" medium-device-size="1"
+										large-device-size="1">
+									</lightning-layout-item>
+
+									<lightning-layout-item size="12" small-device-size="5" medium-device-size="5"
+										large-device-size="5" style="padding: 10px 0 0 0;">
+										<div
+											style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+											<!-- <label>Size(mm)</label> -->
+											<lightning-combobox name="Size(mm)" label="Size(mm)" data-name="itemsize"
+												value={modalData.Sam_Req_Size_mm__c} placeholder="Select Size"
+												options={itemsizeOptions} onchange={handleOnChange} style="width: 67%;"
+												variant="label-inline">
+											</lightning-combobox>
+										</div>
+										<!-- <lightning-input-field name="Brand Name" field-name="Sam_Req_Size_mm__c"
+											value={modalData.Sam_Req_Size_mm__c} onchange={handleOnChange}>
+										</lightning-input-field>
+										<lightning-input-field name="Brand Name" field-name="Sam_Req_Brand_Name__c"
+											value={modalData.Sam_Req_Brand_Name__c} onchange={handleOnChange}>
+										</lightning-input-field> -->
+										<div
+											style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+											<!-- <label>Brand Name</label> -->
+											<lightning-combobox name="Brand Name" label="Brand Name"
+												data-name="brandname" value={modalData.Sam_Req_Brand_Name__c}
+												placeholder="Select an option" options={SamReqBrandOptions}
+												onchange={handleOnChange} style="width: 67%;" variant="label-inline">
+											</lightning-combobox>
+										</div>
+										<lightning-input-field name="Potential Of Business"
+											field-name="Potential_Of_Business__c"
+											value={modalData.Potential_Of_Business__c} onchange={handleOnChange}>
+										</lightning-input-field>
+										<lightning-input-field name="Special Properties"
+											field-name="Special_Properties__c" value={modalData.Special_Properties__c}
+											onchange={handleOnChange} maxlength="49">
+										</lightning-input-field>
+										<lightning-input-field name="Application Details"
+											field-name="Application_Details__c" value={modalData.Application_Details__c}
+											onchange={handleOnChange} maxlength="49">
+										</lightning-input-field>
+										<lightning-input-field name="Remarks" field-name="Remarks__c"
+											value={modalData.Remarks__c} onchange={handleOnChange} maxlength="49">
+										</lightning-input-field>
+									</lightning-layout-item>
+									<lightning-layout-item size="12" small-device-size="1" medium-device-size="1"
+										large-device-size="1">
+									</lightning-layout-item>
+
+								</lightning-layout>
+							</lightning-record-edit-form>
+							<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+								large-device-size="12"
+								style="display: flex; justify-content: center; padding-top: 20px">
+								<lightning-button label="Save" title="Non-primary action" class="slds-m-left_x-small"
+									onclick={AddNewProduct}>
+								</lightning-button>
+								<!-- <lightning-button label="Add" title="Non-primary action" class="slds-m-left_x-small">
+								</lightning-button>
+								<lightning-button label="Clear" title="Non-primary action" class="slds-m-left_x-small">
+								</lightning-button> -->
+								<!-- <lightning-button variant="Brand" label="Proceed" title="Destructive action with a lighter look"
+                                            class="slds-m-left_x-small" onclick={handleSaveItemDetails}></lightning-button> -->
+							</lightning-layout-item>
+						</lightning-card>
+					</div>
+				</div>
+
+				<!-- <footer class="slds-modal__footer">
+                  <button class="slds-button slds-button_neutral" onclick={navigateToRecordPage} title="NO">Cancel</button>
+                  <button class="slds-button slds-button_brand" onclick={handleSelectedTransferRequestDetail}
+                    title="OK">Save</button>
+                </footer> -->
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+
+	<template if:true={isSendSampleOrderFlag}>
+
+		<section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container">
+				<!-- Modal/Popup Header -->
+				<header class="slds-modal__header">
+					<button class="slds-button slds-button_icon slds-modal__close" title="Close" onclick={closeModal}>
+						<lightning-icon icon-name="utility:close" alternative-text="close"
+							size="small"></lightning-icon>
+						<span class="slds-assistive-text">Close</span>
+					</button>
+
+				</header>
+
+				<!-- Modal/Popup Body -->
+				<div class="slds-modal__content slds-p-around_medium">
+					<c-sample-order-send record-id={sampReqRecId} object-api-name="Service_5_Sample_Request__c"
+						onsendsampleorder={handleAfterSend}>
+					</c-sample-order-send>
+				</div>
+
+				<!-- Modal/Popup Footer -->
+				<!-- <footer class="slds-modal__footer">
+					<lightning-button variant="neutral" label="Cancel" onclick={closeModal}></lightning-button>
+					<lightning-button variant="brand" label="Push To TSD" onclick={pushToNav}
+						disabled={pushToNavDisabled}></lightning-button>
+				</footer> -->
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+
+
+</template>

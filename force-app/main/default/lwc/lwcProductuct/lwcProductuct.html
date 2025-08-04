@@ -1,0 +1,40 @@
+<template>
+<!-- <lightning-card> -->
+    <lightning-layout multiple-rows>
+        <lightning-layout-item size="3" style="background-color:yellow">
+            <lightning-layout multiple-rows style="padding:10px">
+                <lightning-layout-item size="4">
+                    Opportunity Name : 
+                    </lightning-layout-item>
+                    <lightning-layout-item size="8">
+                        <c-lwc-productuct-look-up object-api-name="Enquiry__c" icon-name="standard:contact"
+                                                    index={childindex}
+                        index_x={index} style="width: 180"
+                                                        return-fields="Enquiry_Stage__c,Expected_Closure_Date__c"
+                                                        sort-column="Enquiry_Name__c" display-fields="Enquiry_Name__c,Name"
+                                                        query-fields="[]" onrecordselection={onOpportunityChange}
+                                                        >
+                                                    </c-lwc-productuct-look-up>
+                        </lightning-layout-item>
+
+                        <lightning-layout-item size="4">
+                            Expected Closure Date : 
+                            </lightning-layout-item>
+                            <lightning-layout-item size="8">
+                                {oppAccountName}
+                                </lightning-layout-item>
+
+
+                                <lightning-layout-item size="4">
+                                    Opportuity Stage : 
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="8">
+                                        {stage}
+                                        </lightning-layout-item>
+                    </lightning-layout>
+      </lightning-layout-item>
+        <lightning-layout-item size="9" style="background-color:rgb(143, 206, 224)"></lightning-layout-item>
+      </lightning-layout>
+<!-- </lightning-card> -->
+
+</template>

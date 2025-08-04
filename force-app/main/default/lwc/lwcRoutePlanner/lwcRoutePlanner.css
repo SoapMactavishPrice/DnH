@@ -1,0 +1,19 @@
+:host {
+    /* Removes SF Card Header padding/margin top/bottom only */
+    --slds-c-card-header-spacing-block-end: 0px;
+    --slds-c-card-header-spacing-block-start: 0px;
+
+    /* Removes SF Card body padding/margin top/bottom only */
+    --slds-c-card-body-spacing-block-start: 0px;
+    --slds-c-card-body-spacing-block-end: 0px;
+
+    --slds-c-modal-header-spacing-block-start: 0px;
+    --slds-c-modal-header-spacing-block-end: 0px;
+
+    --slds-c-modal-footer-spacing-block-start: 3px;
+    --slds-c-modal-footer-spacing-block-end: 3px;
+}
+
+.padding_0px td {
+    padding: 2px 0px;
+}

@@ -1,0 +1,21 @@
+<template>
+    <lightning-card class="attendance-card">
+        <div class="custom-container">
+            <!-- Check-In -->
+            <div class="entry-row">
+                <button class="action-button check-in" onclick={handleCheckIn}>Check-In</button>
+                <div class="time-label">
+                    <strong>Check-In:</strong> {checkInTime}
+                </div>
+            </div>
+
+            <!-- Check-Out -->
+            <div class="entry-row">
+                <button class="action-button check-out" onclick={handleCheckOut}>Check-Out</button>
+                <div class="time-label">
+                    <strong>Check-Out:</strong> {checkOutTime}
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+</template>

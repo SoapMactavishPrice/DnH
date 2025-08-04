@@ -1,0 +1,207 @@
+<template>
+	<template if:true={isModalOpen}>
+		<template if:false={isMobile}>
+			<section role="dialog" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1"
+				class="slds-modal slds-fade-in-open">
+				<div class="slds-modal__container" style="max-width: 80rem !important;width: 80% !important;">
+					<header class="slds-modal__header custom-header-bg">
+						<h2 class="slds-text-heading_medium">Edit Enquiry Line Items</h2>
+						<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"
+							onclick={closeModal}>
+							<lightning-icon icon-name="utility:close" alternative-text="Close" variant="inverse" size="small">
+							</lightning-icon>
+							<span class="slds-assistive-text">Close</span>
+						</button>
+					</header>
+					<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+						<thead>
+							<tr id="firstRow" class="slds-line-height_reset">
+								<!-- <th class="" scope="col">
+									</th> -->
+								<th class="" scope="col">
+									<div class="slds-truncate" title="Item Number">Item Name</div>
+								</th>
+								<th class="" scope="col">
+									<div class="slds-truncate" title="Quantity"><span class="slds-required requiredHeader">*</span><span
+											class="slds-truncate">Quantity(Kg)</span>
+									</div>
+								</th>
+								<th class="" scope="col">
+									<div class="slds-truncate" title="Sales Price">
+										<span class="slds-required requiredHeader">*</span><span class="slds-truncate">Sales
+											Price</span>
+									</div>
+								</th>
+								<th class="" scope="col">
+									<div class="slds-truncate" title="Status">Status</div>
+									<!-- <span class="slds-required requiredHeader">*</span> -->
+								</th>
+								<!-- <template if:true={isCloseLost}></template> -->
+								<th class="" scope="col">
+									<div class="slds-truncate" title="Reason for lost enquiry">Reason for lost enquiry</div>
+								</th>
+								<th class="" scope="col">
+									<div class="slds-truncate" title="Competitor">Competitor</div>
+								</th>
+								<th class="" scope="col">
+									<div class="slds-truncate" title="Competitor's Product">Competitor's Product</div>
+								</th>
+								<!-- <th class="" scope="col">
+									<div class="slds-truncate" title="Packing Cost">Packing Cost</div>
+									</th> -->
+							</tr>
+						</thead>
+						<tbody>
+							<template for:each={SelectedProductData} for:item="product" for:index="index">
+								<tr key={product.Id} id={product.Id}>
+									<th data-label="Opportunity Name" scope="row">
+										<div class="slds-truncate" title="Cloudhub">
+											{product.Name}
+										</div>
+									</th>
+									<td>
+										<lightning-input type="text" value={product.Qty__c} placeholder="0" data-target-id={product.Id}
+											variant="label-hidden" onchange={handleQuantityChange}></lightning-input>
+									</td>
+									<td>
+										<lightning-input type="text" value={product.Dealer_Rate__c} placeholder="0"
+											data-target-id={product.Id} variant="label-hidden"
+											onchange={handleSalesPriceChange}></lightning-input>
+									</td>
+									<td>
+										<lightning-combobox name="Status" variant="label-hidden" placeholder="Select Status"
+											data-target-id={product.Id} data-index={index} value={product.Status__c} options={statusOptions}
+											onchange={handleStatusChange}>
+										</lightning-combobox>
+									</td>
+									<!-- <template if:true={product.isCloseLost}>  </template> -->
+									<td>
+										<lightning-combobox name="Reasonforlost" variant="label-hidden" placeholder="Select Reason for lost "
+											data-target-id={product.Id} data-index={index} value={product.Reason_for_lost_enquiry__c}
+											options={ReasonforlostenquiryOptions} onchange={handleReasonforlostChange}
+											disabled={product.isCloseWon}>
+										</lightning-combobox>
+									</td>
+									<td>
+										<lightning-combobox name="Competitor" variant="label-hidden" placeholder="Select Comprtitor"
+											data-target-id={product.Id} data-index={index} value={product.Competitor__c}
+											options={ComprtitormasterOptions} onchange={handleCompetitorChange} disabled={product.isComp}>
+										</lightning-combobox>
+									</td>
+									<td>
+										<c-competitor-product-lookup data-target-id={product.Id} icon-name="standard:account"
+											s-object-api-name="Competitor_Product__c" label="Competitor Product" rec-id={currentCompetitor}
+											onlookupupdate={lookupRecord} placeholder="Select Competitor Product" disabled={product.isComp}>
+										</c-competitor-product-lookup>
+									</td>
+									<!--                 
+										<td>
+											<lightning-input type="number" value={product.PackingCost}
+												data-target-id={product.Id} variant="label-hidden"
+												onchange={handlePackingCostChange}></lightning-input>
+										</td> -->
+									<!-- <td>
+										<lightning-input type="text" value={product.LineDescription}
+											variant="label-hidden" data-target-id={product.Id}
+											onchange={handleLineDescriptionChange}></lightning-input>
+										</td>-->
+									<!-- <td>
+										<lightning-button-icon icon-name="utility:delete" onclick={hadleDelete}
+											variant="label-hidden" value={product.Id} data-target-id={product.Id}
+											data-field="delete" alternative-text="Delete"
+											class="slds-m-left_xx-small" title="Delete"></lightning-button-icon>
+										</td> -->
+								</tr>
+							</template>
+						</tbody>
+					</table>
+					<footer class="slds-modal__footer">
+						<div class="slds-grid slds-grid_align-center">
+							<lightning-button class="button-spacing" variant="neutral" label="Cancel"
+								onclick={closeModal}></lightning-button>
+							<lightning-button variant="brand" label="Save" onclick={saveDetails}></lightning-button>
+						</div>
+					</footer>
+				</div>
+			</section>
+		</template>
+		<template if:true={isMobile}>
+			
+		<div class="slds-p-around_medium">
+			<h2 class="slds-text-heading_medium">Edit Enquiry Line Items</h2>
+			<ul class="mobile-list">
+				<template for:each={SelectedProductData} for:item="product" for:index="index">
+					<li key={product.Id} class="mobile-card">
+						<div class="card-header">
+							<h3 class="slds-text-heading_small">{product.Name}</h3>
+						</div>
+						<div class="card-body">
+							<div class="slds-form-element">
+								<label class="slds-form-element__label">Item Name</label>
+								<div class="slds-form-element__control">
+									<p>{product.Item_Master__r.Name}</p>
+								</div>
+							</div>
+							<div class="slds-form-element slds-m-bottom_small">
+								<label class="slds-form-element__label">Quantity (Kg)</label>
+								<div class="slds-form-element__control">
+									<lightning-input type="text" value={product.Qty__c} placeholder="0"
+										data-target-id={product.Id} onchange={handleQuantityChange}>
+									</lightning-input>
+								</div>
+							</div>
+							<div class="slds-form-element slds-m-bottom_small">
+								<label class="slds-form-element__label">Sales Price</label>
+								<div class="slds-form-element__control">
+									<lightning-input type="text" value={product.Dealer_Rate__c} placeholder="0"
+										data-target-id={product.Id} onchange={handleSalesPriceChange}>
+									</lightning-input>
+								</div>
+							</div>
+							<div class="slds-form-element slds-m-bottom_small">
+								<label class="slds-form-element__label">Status</label>
+								<div class="slds-form-element__control">
+									<lightning-combobox name="Status" placeholder="Select Status"
+										data-target-id={product.Id} data-index={index} value={product.Status__c}
+										options={statusOptions} onchange={handleStatusChange}>
+									</lightning-combobox>
+								</div>
+							</div>
+							<div class="slds-form-element slds-m-bottom_small">
+								<label class="slds-form-element__label">Reason for Lost Enquiry</label>
+								<div class="slds-form-element__control">
+									<lightning-combobox name="Reasonforlost" placeholder="Select Reason for Lost"
+										data-target-id={product.Id} data-index={index}
+										value={product.Reason_for_lost_enquiry__c}
+										options={ReasonforlostenquiryOptions} onchange={handleReasonforlostChange}
+										disabled={product.isCloseWon}>
+									</lightning-combobox>
+								</div>
+							</div>
+							<div class="slds-form-element slds-m-bottom_small">
+								<label class="slds-form-element__label">Competitor</label>
+								<div class="slds-form-element__control">
+									<lightning-combobox name="Competitor" placeholder="Select Competitor"
+										data-target-id={product.Id} data-index={index} value={product.Competitor__c}
+										options={ComprtitormasterOptions} onchange={handleCompetitorChange}
+										disabled={product.isComp}>
+									</lightning-combobox>
+								</div>
+							</div>
+						</div>
+					</li>
+				</template>
+			</ul>
+		</div>
+		
+		<div class="slds-grid slds-grid_align-center">
+			<lightning-button class="button-spacing" variant="neutral" label="Cancel"
+				onclick={closeModal}></lightning-button>
+			<lightning-button variant="brand" label="Save" onclick={saveDetails}></lightning-button>
+		</div>
+					
+				
+		</template>
+		
+	</template>
+</template>

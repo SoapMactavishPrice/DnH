@@ -1,0 +1,105 @@
+<template>
+    <lightning-card variant="base">
+        <!-- <div slot="title">
+          Card Title
+      </div>
+      <div slot="actions">
+    
+      </div>
+      <div slot="footer">
+    
+      </div> -->
+        <div>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="12" medium-device-size="6" large-device-size="3"
+                    class="slds-p-around_medium">
+                    <lightning-input label="Current Fiscal Year" type="text" value={currentFiscalYearName} disabled>
+                    </lightning-input>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="12" medium-device-size="6" large-device-size="3"
+                    class="slds-p-around_medium">
+                    <lightning-combobox label="Month" value={monthValue} options={monthOptions}
+                        onchange={handleMonthChange}>
+                    </lightning-combobox>
+                </lightning-layout-item>
+            </lightning-layout>
+
+            <div>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered custom-table">
+                    <thead>
+                        <tr>
+                            <th class="slds-text-align_center" scope="col">Customer Name</th>
+                            <th class="slds-text-align_center" scope="col">Sales Order No</th>
+                            <th class="slds-text-align_center" scope="col">Item Name</th>
+                            <th class="slds-text-align_center" scope="col">Net Invoice value</th>
+                            <th class="slds-text-align_center" scope="col">Action</th>
+                            <!-- <th class="slds-text-align_center" scope="col">End Customer</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={salesRegisterObjects} for:item="salesRegister">
+                            <tr key={salesRegister.id}>
+                                <td class="slds-text-align_center">{salesRegister.customerName}</td>
+                                <td class="slds-text-align_center">{salesRegister.salesOrderNo}</td>
+                                <td if:false={salesRegister.itemNoName} class="slds-text-align_center"></td>
+                                <td if:true={salesRegister.itemNoName} class="slds-text-align_center">
+                                    {salesRegister.itemNoName}</td>
+                                <td class="slds-text-align_center">{salesRegister.netInvoiceValue}</td>
+                                <!-- <td class="slds-text-align_left">
+                                    <c-lookup-component object-api-name="Account" icon-name="standard:account"
+                                        rowid={salesRegister.id} index={salesRegister.id} index_x={salesRegister.id}
+                                        return-fields="Customer_Type__c" sort-column="Name" display-fields=""
+                                        query-fields="['Name']" onrecordselection={handleAccountChange}
+                                        onfocus={handleAccountChange}>
+                                    </c-lookup-component>
+                                </td> -->
+                                <td class="slds-text-align_center">
+                                    <lightning-button-icon icon-name="utility:add" alternative-text="Add" data-parent={salesRegister.id}
+                                        onclick={addLineItem} data-index={salesRegister.index}>
+                                    </lightning-button-icon>
+                                </td>
+                            </tr>
+
+                            <template if:true={salesRegister.lineItems}>
+                                <tr key={salesRegister.id}>
+                                    <th>End Customer</th>
+                                    <th>Net Invoice</th>
+                                    <th>Quantity</th>
+                                </tr>
+                                <template for:each={salesRegister.lineItems} for:item="eachLineItem">
+                                    <tr key={eachLineItem.tempId}>
+                                        <td>
+                                            <c-lookup-component object-api-name="Account" icon-name="standard:account"
+                                                rowid={salesRegister.id} index={salesRegister.id} index_x={salesRegister.id}
+                                                return-fields="Customer_Type__c" sort-column="Name" display-fields=""
+                                                query-fields="['Name']" onrecordselection={handleAccountChange}
+                                                onfocus={handleAccountChange}>
+                                            </c-lookup-component>
+                                        </td>
+                                        <td>
+                                            <lightning-input type="number" value={eachLineItem.netInvoiceValue} onchange={handleChildItemChange} data-id="netInvoiceValue"></lightning-input>
+                                        </td>
+                                        <td>
+                                            <lightning-input type="number" value={eachLineItem.quantity} onchange={handleChildItemChange} data-id="quantity"></lightning-input>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </template>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+
+            <template if:true={srdFlag}>
+                <lightning-layout>
+                    <lightning-layout-item size="12" class="slds-p-around_medium slds-text-align_center">
+                        <lightning-button variant="brand" label="Save" title="Save"
+                            onclick={handleUpdateSalesRegisters}>
+                        </lightning-button>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </template>
+        </div>
+    </lightning-card>
+</template>

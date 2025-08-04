@@ -1,0 +1,22 @@
+/* Pagination Section */
+.pagination-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.pagination-button {
+    font-size: 0.8rem;
+}
+
+.page-info {
+    font-size: 0.9rem;
+}
+
+.total-row {
+    font-weight: 700;
+    background: #c9c9c9;
+    color: black;
+}

@@ -1,0 +1,275 @@
+<template>
+	<div if:true={showSpinner} class="exampleHolder">
+		<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+	</div>
+	<lightning-card>
+		<div style="padding-left: 5px !important; font-size: 20px !important; font-weight: 500;">
+			Service 31 (Multiple TDC)
+		</div>
+		<div style="border-bottom: 1px solid black;"></div>
+		<div style="padding: 10px;">
+			<lightning-record-edit-form object-api-name="Multiple_Service_31__c" data-id="form1"
+				onsuccess={handleMainOnSuccess} onsubmit={handleMainOnSubmit}>
+				<lightning-layout multiple-rows>
+					<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5"
+						style="padding-left: 10px;">
+						<!-- <lightning-input-field name="Document No" field-name="Document_No__c"
+							style="padding-bottom: 10px !important;" read-only disabled>
+						</lightning-input-field> -->
+						<lightning-input-field field-name="Name"
+						label="Document No"  value={displayLabel}  disabled></lightning-input-field>
+                        </lightning-layout-item>
+					
+					<lightning-layout-item size="12" small-device-size="1" medium-device-size="1" large-device-size="1">
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5">
+						<lightning-input-field name="Document Date" field-name="Document_Date__c"
+							style="padding-bottom: 10px !important;" read-only disabled>
+						</lightning-input-field>
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="1" medium-device-size="1" large-device-size="1">
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12"
+						style="border-bottom: 1px solid black; border-top: 1px solid black;">
+						<div style="padding: 5px 0 5px 0; font-size: 16px; color: red;">
+							Customer Info
+						</div>
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5"
+						style="padding: 10px 0 0 10px;">
+						<lightning-input-field name="Customer Name" field-name="Name_Of_The_Customer__c" required>
+						</lightning-input-field>
+						<lightning-input-field name="Contact Number" field-name="Contact_Number__c">
+						</lightning-input-field>
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="1" medium-device-size="1" large-device-size="1">
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5"
+						style="padding: 10px 0 0 0;">
+						<lightning-input-field name="Tech Cont Person" field-name="Technical_Contact_Person__c">
+						</lightning-input-field>
+						<lightning-input-field name="Email of Contact" field-name="Email_Id_of_Contact__c">
+						</lightning-input-field>
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="1" medium-device-size="1" large-device-size="1">
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12"
+						style="border-bottom: 1px solid black; border-top: 1px solid black; display: flex; justify-content: space-between;">
+						<div style="padding: 8px 0 5px 0; font-size: 16px; color: red;">
+							Item Details
+						</div>
+						<div style="padding: 5px 0 5px 0;">
+							<lightning-button label="Add Items" variant="Brand" slot="actions" icon-name="utility:add"
+								onclick={handleOpenAddNewItems} class="slds-m-right_small">
+							</lightning-button>
+						</div>
+					</lightning-layout-item>
+					<template if:true={addedItemListLength}>
+						<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12"
+							padding="around-small" style="padding-top: 0px !important;">
+							<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-m-top_large">
+								<thead>
+									<tr class="slds-line-height_reset">
+										<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+											<div class="slds-truncate" title="Sr.No.">Sr.No.</div>
+										</th>
+										<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+											<div class="slds-truncate" title="TDC/TPS No">TDC/TPS No</div>
+										</th>
+										<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+											<div class="slds-truncate" title="Revision">Revision</div>
+										</th>
+										<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+											<div class="slds-truncate" title="Unit Of Measure">Unit Of Measure</div>
+										</th>
+										<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+											<div class="slds-truncate" title="Quantity">Quantity</div>
+										</th>
+										<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+											<div class="slds-truncate" title="Field Staff TDC Remark">Field Staff TDC
+												Remark</div>
+										</th>
+										<th class="" scope="col" style="background-color: #a52c30; color: #fff;">
+											<div class="slds-truncate" title="Field Staff TDC Remark">Action</div>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<template for:each={addedItemList} for:item="ail" for:index="Index">
+										<tr key={ail.SrNo}>
+											<th scope="col">
+												<div class="slds-truncate" title="Name">{ail.SrNo}</div>
+											</th>
+											<th scope="col">
+												<div class="slds-truncate" title="Name" if:true={ail.TDC_TPS_No__c}>{ail.TDC_TPS_No__c}
+												</div>
+											</th>
+											<th scope="col">
+												<div class="slds-truncate" title="Name" if:true={ail.Revision__c}>{ail.Revision__c}
+												</div>
+											</th>
+											<th scope="col">
+												<div class="slds-truncate" title="Name" if:true={ail.Unit_of_Measure__c}>
+													{ail.Unit_of_Measure__c}
+												</div>
+											</th>
+											<th scope="col">
+												<div class="slds-truncate" title="Name" if:true={ail.Quantity__c}>{ail.Quantity__c}
+												</div>
+											</th>
+											<th scope="col">
+												<div class="slds-truncate" title="Name" if:true={ail.Field_Staff_TDC_Remark__c}>
+													{ail.Field_Staff_TDC_Remark__c}
+												</div>
+											</th>
+											<th style="width: 5%; padding-top: 10px;">
+												<lightning-icon icon-name="action:edit" data-index={Index} alternative-text="Success!"
+													variant="success" title="Edit Row" onclick={handleEditRow} style="margin-right: 10px;"
+													size="x-small"></lightning-icon>
+												<lightning-icon icon-name="action:delete" data-index={Index} alternative-text="Delete!"
+													variant="success" title="Delete Row" onclick={handleRemoveRow}
+													size="x-small"></lightning-icon>
+											</th>
+										</tr>
+									</template>
+								</tbody>
+							</table>
+						</lightning-layout-item>
+					</template>
+					<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12"
+						style="border-bottom: 1px solid black; border-top: 1px solid black;">
+						<div style="padding: 5px 0 5px 0; font-size: 16px; color: red;">
+							User Input
+						</div>
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5"
+						style="padding: 10px 0 0 10px;">
+						<lightning-input-field name="Sales Person" field-name="Sales_Person__c" required>
+						</lightning-input-field>
+						<lightning-input-field style="margin-bottom: 0px !important;" name="Zonal Head" field-name="Zonal_Head__c" required>
+						</lightning-input-field>
+						<!-- <lightning-input-field name="Attachment" field-name="Size_mm__c">
+						</lightning-input-field> -->
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="1" medium-device-size="1" large-device-size="1">
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5"
+						style="padding: 10px 0 0 0;">
+						<lightning-input-field name="Area Manager" field-name="Area_Manager__c" required>
+						</lightning-input-field>
+						<lightning-input-field name="Field Staff Remarks" field-name="Field_Staff_Remark__c">
+						</lightning-input-field>
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="1" medium-device-size="1" large-device-size="1">
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="4" medium-device-size="4" large-device-size="4"
+						style="padding: 0px 0 0 10px;">
+						<div style="display: flex; align-items: center; justify-content: space-between;">
+							<label>Attachment</label>
+							<lightning-input type="file" accept={acceptedFormats} onchange={handleMainFileUpload}>
+							</lightning-input>
+							{doc_MainFileName}
+						</div>
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="8" medium-device-size="8" large-device-size="8">
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12"
+						style="text-align: center;">
+						<lightning-button label="Save" title="Non-primary action" onclick={handleMainOnSuccess}
+							class="slds-m-left_x-small"></lightning-button>
+						<lightning-button variant="Brand" label="Submit" type="submit" title="Primary action"
+							class="slds-m-left_x-small"></lightning-button>
+						<lightning-button variant="destructive-text" label="Cancel" title="Destructive action with a lighter look"
+							onclick={handleMainClick} class="slds-m-left_x-small"></lightning-button>
+					</lightning-layout-item>
+				</lightning-layout>
+			</lightning-record-edit-form>
+		</div>
+	</lightning-card>
+
+	<template if:true={isAddItemModalOpen}>
+		<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+			aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container" style="width: 75% !important; max-width: 80rem;">
+				<!-- Modal/Popup Box LWC header here -->
+				<header class="slds-modal__header">
+					<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"
+						onclick={handleCloseAddNewItems}>
+						<lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small">
+						</lightning-icon>
+						<span class="slds-assistive-text">Close</span>
+					</button>
+					<h2 id="modal-heading-04" class="slds-text-heading_medium slds-hyphenate">Add Item</h2>
+				</header>
+				<div class="slds-modal__content slds-var-p-around_medium" id="modal-content-id-5"
+					style="padding-top: 0px !important">
+					<div style="margin-right: 30px;margin-left:30px;">
+						<div if:true={showSpinner2} class="exampleHolder">
+							<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+						</div>
+						<lightning-card>
+							<lightning-record-edit-form object-api-name="Multiple_Service_31_Line_Item__c">
+								<lightning-layout multiple-rows>
+									<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5"
+										style="padding: 10px 0 0 10px;">
+										<lightning-input-field name="TDC/TPS No" field-name="TDC_TPS_No__c" value={modalData.TDC_TPS_No__c}
+											onchange={handleModalInputChange}>
+										</lightning-input-field>
+										<lightning-input-field name="Revision" field-name="Revision__c" value={modalData.Revision__c}
+											onchange={handleModalInputChange}>
+										</lightning-input-field>
+										<lightning-input-field name="Qty" field-name="Quantity__c" value={modalData.Quantity__c}
+											onchange={handleModalInputChange}>
+										</lightning-input-field>
+										<div style="display: flex; align-items: center; justify-content: space-between;">
+											<label>Attachment</label>
+											<lightning-input type="file" accept={acceptedFormats} onchange={handleAddItemFileUpload}>
+											</lightning-input>
+											{doc_AddItemFileName}
+										</div>
+									</lightning-layout-item>
+									<lightning-layout-item size="12" small-device-size="1" medium-device-size="1" large-device-size="1">
+									</lightning-layout-item>
+									<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5"
+										style="padding: 10px 0 0 0;">
+										<lightning-input-field name="Ex TDS/TPS Ref No" field-name="Existing_TDS_TPS_Reference_No__c"
+											value={modalData.Existing_TDS_TPS_Reference_No__c} onchange={handleModalInputChange}>
+										</lightning-input-field>
+										<lightning-input-field name="UoM" field-name="Unit_of_Measure__c"
+											value={modalData.Unit_of_Measure__c} onchange={handleModalInputChange}>
+										</lightning-input-field>
+										<lightning-input-field name="Field Staff Remark" field-name="Field_Staff_TDC_Remark__c"
+											value={modalData.Field_Staff_TDC_Remark__c} onchange={handleModalInputChange}>
+										</lightning-input-field>
+									</lightning-layout-item>
+									<lightning-layout-item size="12" small-device-size="1" medium-device-size="1" large-device-size="1">
+									</lightning-layout-item>
+								</lightning-layout>
+							</lightning-record-edit-form>
+							<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12"
+								style="display: flex; justify-content: center; padding-top: 20px">
+								<lightning-button label="Save" title="Non-primary action" class="slds-m-left_x-small"
+									onclick={handleSaveModalData}>
+								</lightning-button>
+								<lightning-button label="Add" title="Non-primary action" class="slds-m-left_x-small">
+								</lightning-button>
+								<lightning-button label="Clear" title="Non-primary action" class="slds-m-left_x-small">
+								</lightning-button>
+								<!-- <lightning-button variant="Brand" label="Proceed" title="Destructive action with a lighter look"
+									class="slds-m-left_x-small" onclick={handleSaveItemDetails}></lightning-button> -->
+							</lightning-layout-item>
+						</lightning-card>
+					</div>
+				</div>
+
+				<!-- <footer class="slds-modal__footer">
+          <button class="slds-button slds-button_neutral" onclick={navigateToRecordPage} title="NO">Cancel</button>
+          <button class="slds-button slds-button_brand" onclick={handleSelectedTransferRequestDetail}
+            title="OK">Save</button>
+        </footer> -->
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+
+</template>

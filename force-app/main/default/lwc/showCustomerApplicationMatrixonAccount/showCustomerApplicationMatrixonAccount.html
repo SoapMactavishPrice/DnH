@@ -1,0 +1,121 @@
+<template>
+    
+    <lightning-quick-action-panel>
+        <div class="custom-header" style="text-align:center;font-size: 1.5em;margin-bottom: 10px;">
+           <strong>Customer Application Matrix </strong> 
+        </div>
+        <!-- <div class="slds-scrollable_x" style="height: 100rem;width: 100rem;"></div> -->
+        
+        <div class="slds-scrollable_x" style="height:25rem; width:100rem;" tabindex="0">
+        <!-- <div class="slds-size_3-of-3"></div> -->
+            <div class="slds-text-align_center slds-m-top_x-small">
+                <div class="slds-col slds-box" style="min-width: 1000px;">
+                     <!-- Set min-width to a large value to ensure horizontal overflow -->
+                     <div style="height:400px">
+                    <lightning-datatable data={showTableProduct} key-field="Id" columns={cols} sorted-by={sortBy}
+                    sorted-direction={sortDirection} onsort={doSorting} hide-checkbox-column="true" style="width: 100rem;">
+                    </lightning-datatable></div>
+                    <template if:true={showSpinner}>
+                        <div class="slds-is-relative" style="min-height: 40vh;">
+                            <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+                        </div>
+                    </template>
+                
+            </div>
+        </div>
+    </div>
+        
+       
+   
+
+
+
+        
+            <footer class="slds-modal__footer">
+                <div class="slds-grid slds-grid_vertical-align-center slds-grid_align-spread" style="padding-top: 0.5em;">
+                    <!--RECORDS PER PAGE-->
+                    <div class="slds-col">
+                        <div class="slds-list_inline slds-p-bottom_xx-small">
+                            <label class="slds-text-color_weak slds-p-horizontal_x-small" for="recordsPerPage">Page Size:</label>
+                            <div class="slds-select_container">
+                                <select class="slds-select" id="recordsPerPage" onchange={handleRecordsPerPage}>
+                                    <template for:each={pageSizeOptions} for:item="option">
+                                        <option key={option} value={option}>{option}</option>
+                                    </template>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!--PAGE NAVIGATION-->
+                    <div class="slds-align_absolute-center" style="height:5rem">
+                        <lightning-button disabled={bDisableFirst} icon-name="utility:jump_to_left" label="First" class="slds-p-horizontal_x-small" alternative-text="first page" onclick={firstPage}></lightning-button>
+        
+                        <lightning-button disabled={bDisableFirst} icon-name="utility:chevronleft" label="Previous" alternative-text="Previous" onclick={previousPage}></lightning-button>
+                        &nbsp;
+                        <span class="slds-badge">Showing {pageNumber} &nbsp;of&nbsp; {totalPages} &nbsp;&nbsp;Page(s)</span>
+                        &nbsp;
+                        <lightning-button disabled={bDisableLast} icon-name="utility:chevronright" label="Next" alternative-text="Next" onclick={nextPage} class="slds-p-horizontal_x-small" icon-position="right"></lightning-button>
+        
+                        <lightning-button disabled={bDisableLast} icon-name="utility:jump_to_right" label="Last" alternative-text="last page" onclick={lastPage} icon-position="right"></lightning-button>
+                    </div>
+        
+                    <!--TOTAL RECORDS-->
+                    <div class="slds-clearfix">
+                        <div class="slds-float_right">
+                            <span class="slds-badge"> Total Records: {totalRecords}</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div style="display:flex;justify-content: center;">
+                    <div class="slds-align_absolute-center" if:true={isFirstPage}>
+                        <lightning-button disabled={bDisableFirst} icon-name="utility:jump_to_left"
+                            label="First" class="slds-p-horizontal_x-small" alternative-text="first page"
+                            onclick={firstPage}></lightning-button>
+                        <lightning-button disabled={bDisableFirst} icon-name="utility:chevronleft"
+                            label="Previous" alternative-text="Previous"
+                            onclick={previousHandler}></lightning-button>
+                        &nbsp;
+                        <span class="slds-badge slds-badge_lightest"
+                            style="margin-right: 10px;margin-left: 10px;">
+                            Page {page} of {totalPage} | Total: {totalRecountCount}
+                        </span>
+                        &nbsp;
+                        <lightning-button disabled={bDisableLast} icon-name="utility:chevronright" label="Next"
+                            alternative-text="Next" onclick={nextHandler} class="slds-p-horizontal_x-small"
+                            icon-position="right"></lightning-button>
+                        <lightning-button disabled={bDisableLast} icon-name="utility:jump_to_right" label="Last"
+                            alternative-text="last page" onclick={lastPage}
+                            icon-position="right"></lightning-button>
+                    </div>
+
+                    <template if:false={isFirstPage}>
+                        <lightning-button class="slds-float_left" onclick={handleback}
+                            label="Back"></lightning-button>
+                    </template>
+                    <template if:true={isFirstPage}>
+                        <lightning-button class="slds-m-left_small" onclick={closeQuickAction}
+                            label="Cancel"></lightning-button>
+                    </template>
+                    <template if:true={isFirstPage}>
+                        <lightning-button class="slds-m-left_small" onclick={nextDetails} label="Next"
+                            variant="brand" disabled={DisableNext}></lightning-button>
+                    </template> -->
+                    <!-- <template if:false={isFirstPage}>
+                        <lightning-button class="slds-m-left_small" variant="brand" onclick={saveDetails}
+                            label="Save"></lightning-button>
+                    </template> 
+                </div>-->
+            </footer>
+            <div style="width:100%;" class="slds-m-top_small">
+                <div style="display:flex; width:97%">
+                    <div class="slds-align_absolute-center">
+                        <lightning-button onclick={closeQuickAction} label="Close"></lightning-button>
+                        
+                    </div>
+                </div>
+            </div>
+       
+    </lightning-quick-action-panel>
+
+</template>

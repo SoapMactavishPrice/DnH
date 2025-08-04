@@ -1,0 +1,137 @@
+.slds-modal__container {
+    max-width: 80rem !important;
+    width: 80% !important;
+    height:95% !important;
+  }
+  
+  
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  }
+  
+  input[type=number]{
+  border: none;
+  background-color: transparent;
+  }
+  
+  input[type=number]:focus {
+  outline: none;
+  }
+  
+  .errorColor{
+    color:red;
+     /*text-decoration: underline;*/
+    font-size: 12px;
+  
+  }
+  
+  button {
+  background-color: transparent;
+  visibility: hidden;
+  }
+  table tbody tr:hover button {
+  visibility: visible;
+  }
+  
+  .icon:hover {
+  --slds-c-icon-color-foreground: rgb(255, 255, 255);
+  }
+  
+  
+  table {
+  border-collapse: collapse;
+  }
+  
+  table thead tr th {background-color: aliceblue;}
+  
+  th, td {
+  padding:5px;
+  border-bottom: 1px solid #ddd;
+  }
+  
+  
+  table tbody tr:hover{
+  background-color: aliceblue;
+  }
+  
+  
+  .divclas{
+  position: absolute;
+  z-index: 99;
+  margin-left: 35%;
+  background: white;
+  border: 1px solid;
+  padding: 1%;
+  width: 60%;
+  max-height: 61%;
+  overflow: auto;
+  }
+  .button-spacing {
+    margin-right: 10px; /* Adjust the value as needed */
+}
+.custom-header-bg, .custom-footer-bg {
+  background-color: #f3f2f2; /* Adjust the color as needed */
+  padding: 1rem;
+}
+
+.header-text {
+  color: #333; /* Adjust text color for contrast */
+}
+.custom-modal-border {
+  border: 2px solid #d8dde6; /* Adjust border color */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Optional shadow for a popup effect */
+  padding: 1rem; /* Optional padding inside the border */
+}
+.grayed-out {
+  background-color: #f4f4f4;
+  color: #6e6e6e;
+  cursor: not-allowed;
+}
+
+/* Base Styles for List */
+.mobile-list {
+  list-style-type: none; /* Remove default bullet points */
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Add spacing between items */
+}
+
+.mobile-card {
+  background-color: #f8f8f8; /* Light background for each card */
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for card effect */
+}
+
+/* Header Styles */
+.card-header {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+/* Body Styles */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem; /* Space between form elements */
+}
+
+.slds-form-element__label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333; /* Slightly darker text for better visibility */
+}
+
+/* Mobile Responsiveness */
+@media only screen and (max-width: 768px) {
+  .mobile-card {
+      font-size: 0.9rem; /* Slightly smaller text for mobile screens */
+      padding: 0.8rem;
+  }
+}

@@ -1,0 +1,41 @@
+<template>
+    <div class="tabs-container">
+        <lightning-tabset variant="scoped">
+            <lightning-tab label="Posted Invoice" onactive={handleTabChange}>
+                <div class="tab-content">
+                    <template if:true={isTab1Active}>
+                        <c-posted-invoice-report-l-w-c data-cid="Posted Invoice"></c-posted-invoice-report-l-w-c>
+                    </template>
+                </div>
+            </lightning-tab>
+            <lightning-tab label="Credit Note" onactive={handleTabChange}>
+                <div class="tab-content">
+                    <template if:true={isTab2Active}>
+                        <c-credit-note-report-l-w-c data-cid="Credit Note"></c-credit-note-report-l-w-c>
+                    </template>
+                </div>
+            </lightning-tab>
+            <lightning-tab label="Sales Order Detail" onactive={handleTabChange}>
+                <div class="tab-content">
+                    <template if:true={isTab3Active}>
+                        <c-sales-order-report-l-w-c data-cid="Sales Order Detail"></c-sales-order-report-l-w-c>
+                    </template>
+                </div>
+            </lightning-tab>
+            <lightning-tab label="Customer Ledger" onactive={handleTabChange}>
+                <div class="tab-content">
+                    <template if:true={isTab4Active}>
+                        <c-customer-ledger-report-l-w-c data-cid="Customer Ledger"></c-customer-ledger-report-l-w-c>
+                    </template>
+                </div>
+            </lightning-tab>
+            <lightning-tab label="Sales Register" onactive={handleTabChange}>
+                <div class="tab-content">
+                    <template if:true={isTab5Active}>
+                        <c-sales-register-report-l-w-c data-cid="Sales Register"></c-sales-register-report-l-w-c>
+                    </template>
+                </div>
+            </lightning-tab>
+        </lightning-tabset>
+    </div>
+</template>

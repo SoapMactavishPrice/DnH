@@ -1,0 +1,7 @@
+<aura:component implements="lightning:isUrlAddressable,force:hasRecordId,flexipage:availableForAllPageTypes,lightning:actionOverride" >
+    <aura:attribute name="refRecordId" type="String" />
+    <aura:attribute name="refaccountId" type="String" />
+    <aura:attribute name="refrecordTypeId" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <c:createSalesOrder/>
+</aura:component>

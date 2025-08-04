@@ -1,0 +1,12 @@
+.scrollable-body {
+    max-height: 400px; /* Adjust height as needed */
+    /* overflow-y: auto; Enable vertical scrolling */
+}
+
+.sticky-footer {
+    position: sticky;
+    bottom: 0;
+    background-color: white; /* Ensure the footer has a background */
+    z-index: 1; /* Make sure the footer is on top of the body content */
+    /* border-top: 1px solid #ddd; Optional: Add a border to separate footer */
+}

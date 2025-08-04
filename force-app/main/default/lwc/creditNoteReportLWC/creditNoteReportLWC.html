@@ -1,0 +1,60 @@
+<template>
+    <div if:true={showSpinner} class="exampleHolder">
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </div>
+    <lightning-card>
+        <lightning-record-edit-form object-api-name="Enquiry__c">
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="3" small-device-size="3" medium-device-size="3" large-device-size="3"
+                    style="padding: 17px 10px;">
+                    <label for="account">Customer</label>
+                    <lightning-input-field class="customerno" field-name="Account__c" variant="label-hidden"
+                        data-id="account"></lightning-input-field>
+                </lightning-layout-item>
+                <lightning-layout-item size="2" small-device-size="2" medium-device-size="2" large-device-size="2"
+                    padding="around-small">
+                    <lightning-input name="startdate" type="date" label="Start Date" value={selectedDate}
+                        onchange={handleDateChange}></lightning-input>
+                </lightning-layout-item>
+                <lightning-layout-item size="2" small-device-size="2" medium-device-size="2" large-device-size="2"
+                    padding="around-small">
+                    <lightning-input name="enddate" type="date" label="End Date" value={selectedDate}
+                        onchange={handleDateChange}></lightning-input>
+                </lightning-layout-item>
+                <lightning-layout-item size="2" small-device-size="2" medium-device-size="2" large-device-size="2"
+                    padding="around-small" style="padding-top: 33px !important;">
+                    <lightning-button variant="Brand" label="Submit" type="button" title="Primary action"
+                        class="slds-m-left_x-small" onclick={handleSearch}></lightning-button>
+                </lightning-layout-item>
+            </lightning-layout>
+        </lightning-record-edit-form>
+        <template if:true={showTableData}>
+            <div style="width: 100%; overflow-x: auto;">
+                <lightning-datatable style="min-width: 1200px;" data={tableData} columns={COLS} key-field="No"
+                    onrowaction={handleRowAction} hide-checkbox-column>
+                </lightning-datatable>
+            </div>
+            <!-- Pagination Section -->
+            <div class="pagination-section">
+                <lightning-layout multiple-rows>
+                    <lightning-layout-item size="2">
+                        <lightning-icon disabled={bDisableFirst} icon-name="utility:chevronleft" label="Previous"
+                            onclick={previousHandler} class="pagination-button" style="float: left;"></lightning-icon>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="8" style="margin-left: 10px;">
+                        <span class="page-info" style="margin-top: 5px;padding-left: 5px;">Page {page}
+                            of {totalPage}
+                        </span>
+                        <!-- </lightning-button> -->
+                        <!-- {totalRecountCount}</span> -->
+                    </lightning-layout-item>
+                    <lightning-layout-item size="1">
+                        <lightning-icon disabled={bDisableLast} icon-name="utility:chevronright" label="Next"
+                            onclick={nextHandler} class="pagination-button"></lightning-icon>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+        </template>
+    </lightning-card>
+
+</template>

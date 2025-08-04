@@ -1,0 +1,213 @@
+<template>
+
+    <lightning-spinner if:true={showSpinner} alternative-text="Loading" size="medium"></lightning-spinner>
+
+    <!-- <lightning-card> -->
+    <lightning-modal-header>
+        <lightning-layout horizontal-align="space" vertical-align="end" pull-to-boundary="small"
+            style="text-align: left">
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="2" large-device-size="2">
+                <lightning-combobox variant="label-stacked" label="Type" value={selectedEntityType}
+                    placeholder=" Select Type" options={entityTypes} onchange={handleEntityChange}></lightning-combobox>
+            </lightning-layout-item>
+
+            <!--
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="2" large-device-size="2">
+                <lightning-combobox variant="label-stacked" label="Country" value={selectedCountry}
+                    placeholder="Select Country" options={countryOptions} onchange={getStateList}></lightning-combobox>
+            </lightning-layout-item>
+        -->
+
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="2" large-device-size="2">
+                <lightning-combobox variant="label-stacked" label="State" value={selectedState}
+                    placeholder="Select State" options={stateOptions} onchange={handleStateChange}></lightning-combobox>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="2" large-device-size="2">
+                <lightning-combobox variant="label-stacked" label="City" value={selectedCity} placeholder="Select City"
+                    options={cityOptions} onchange={handleCityChange}></lightning-combobox>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="2" large-device-size="2">
+                <lightning-combobox if:true={isAsset} variant="label-stacked" label="Site Location"
+                    value={selectedLocation} placeholder="Select Site Location" options={locationOptions}
+                    onchange={handleLocationChange}></lightning-combobox>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="2" large-device-size="2">
+                <lightning-input variant="label-stacked" type="toggle" label="Access all records?" value={value}
+                    onchange={handleAccessLevelChange} style="text-align: center">
+                </lightning-input>
+            </lightning-layout-item>
+        </lightning-layout>
+    </lightning-modal-header>
+    <!-- </lightning-card> -->
+
+    <!-- <lightning-card> -->
+    <lightning-modal-body>
+        <template if:true={hasDataInTable}>
+            <lightning-layout multiple-rows horizontal-align="space" vertical-align="center"
+                class="slds-p-vertical_xx-small">
+                <!--
+            <lightning-layout-item size="12" small-device-size="3" medium-device-size="3" large-device-size="3">
+                <lightning-combobox label="Page size" variant="label-stacked" value={selectedPageSize}
+                    placeholder="Select page size" options={pageSizeOptions}
+                    onchange={handleChange}></lightning-combobox>
+            </lightning-layout-item>
+-->
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="8" large-device-size="8"
+                    class="slds-p-right_xx-large">
+                    <lightning-input label="Search" variant="label-hidden" type="search" value={searchText}
+                        onchange={handleSearch} is-loading={isLoading}></lightning-input>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="4" large-device-size="4">
+                    <div style="display: flex; justify-content: space-evenly; align-items: center">
+                        <lightning-button label="Prev" disabled={isFirstPage} onclick={handlePrevClick}>
+                        </lightning-button>
+                        {paginationString}
+                        <lightning-button label="Next" disabled={isLastPage} onclick={handleNextClick}>
+                        </lightning-button>
+                        <!-- 
+                        <lightning-helptext class="tilt-shaking" icon-name="utility:announcement"
+                            content="To reduce the errors we do update the records on page change also, same as Save button"></lightning-helptext>
+-->
+                    </div>
+                </lightning-layout-item>
+            </lightning-layout>
+
+            <div style="overflow-x: auto">
+                <table class="slds-table slds-table_bordered padding_0px"> <!-- slds-table_cell-buffer -->
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th scope="col" style="text-align: center">
+                                <lightning-input type="checkbox" checked={isMasterCheckboxSelected}
+                                    style="padding: 4px 0px" onchange={handleMasterCheckboxClick}></lightning-input>
+                            </th>
+                            <th scope="col" for:each={columns} for:item="column" key={column}>
+                                <div class="slds-truncate">{column.label}</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr for:each={visibleList} for:item="item" for:index="index" key={item}>
+                            <td style="text-align: center">
+                                <lightning-input type="checkbox" checked={item.isSelected} data-id={item.Id}
+                                    data-index={index} onclick={handleRowSelect}></lightning-input>
+                            </td>
+                            <td>
+                                <div class="slds-truncate slds-cell-wrap">{item.Column1}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate slds-cell-wrap">{item.Column2}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate slds-cell-wrap">{item.Column3}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate slds-cell-wrap">{item.Column4}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate slds-cell-wrap">{item.Column5}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate slds-cell-wrap">{item.Column6}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate slds-cell-wrap">{item.Column7}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate slds-cell-wrap">{item.Column8}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate slds-cell-wrap">{item.Column9}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate slds-cell-wrap">{item.Column10}</div>
+                            </td>
+                        </tr>
+                        <!--
+                        <tr if:true={isLead} for:each={visibleList} for:item="item" for:index="index" key={item.Id}>
+                            <td>
+                                <lightning-input type="checkbox" checked={item.isSelected} data-index={index}
+                                    onclick={handleRowSelect}></lightning-input>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">{item.FirstName}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">{item.LastName}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">{item.Company}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">{item.Status}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">{item.MobilePhone}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">{item.Email}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">{item.LeadSource}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">{item.LeadForBusiness}</div>
+                            </td>
+                        </tr>
+-->
+                    </tbody>
+                </table>
+            </div>
+        </template>
+
+        <div if:false={hasDataInTable}>
+            <div
+                class="slds-grid slds-gutters slds-wrap slds-p-horizontal_small slds-m-top_xx-small slds-m-bottom_xx-small">
+                <div class="slds-col slds-size_3-of-12"></div>
+                <div class="slds-col slds-size_6-of-12"><img src="/img/chatter/OpenRoad.svg"
+                        class="slds-illustration__svg">
+                </div>
+            </div>
+            <div class="slds-col slds-size_3-of-12"></div>
+        </div>
+    </lightning-modal-body>
+    <!-- </lightning-card> -->
+
+    <lightning-modal-footer>
+
+        <div if:true={hasDataInTable} style="display: flex;justify-content: center;gap: 20px">
+
+            <lightning-button variant="neutral" label="Cancel" title="Cancel" data-action="Cancel"
+                onclick={handleFooterAction}></lightning-button>
+
+            <lightning-button variant="brand" label="Save" title="Save" data-action="Save"
+                onclick={handleFooterAction}></lightning-button>
+
+        </div>
+
+        <!-- 
+        <lightning-layout horizontal-align="space">
+            <lightning-layout-item size="12" small-device-size="2" medium-device-size="4" large-device-size="5">
+            </lightning-layout-item>
+
+            <lightning-layout-item size="12" small-device-size="4" medium-device-size="2" large-device-size="1">
+                <lightning-button variant="neutral" label="Cancel" title="Cancel" data-action="Cancel"
+                    onclick={handleFooterAction}></lightning-button>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="12" small-device-size="4" medium-device-size="2" large-device-size="1">
+                <lightning-button variant="brand" label="Save" title="Save" data-action="Save"
+                    onclick={handleFooterAction}></lightning-button>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="12" small-device-size="2" medium-device-size="4" large-device-size="5">
+            </lightning-layout-item>
+        </lightning-layout>
+-->
+
+    </lightning-modal-footer>
+
+
+</template>

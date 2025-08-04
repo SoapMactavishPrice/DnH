@@ -1,0 +1,16 @@
+/* Pagination Section */
+.pagination-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.pagination-button {
+    font-size: 0.8rem;
+}
+
+.page-info {
+    font-size: 0.9rem;
+}

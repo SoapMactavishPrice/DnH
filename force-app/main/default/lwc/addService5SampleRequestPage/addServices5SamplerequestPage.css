@@ -1,0 +1,44 @@
+.button-container {
+    text-align: right;
+    margin-bottom: -10px; /* Adjust this as needed to position the button */
+    height: 50px; /* Adjust as needed */
+
+}
+
+.item-button .slds-button_brand {
+    background-color: blue; /* Change this to your desired color */
+    color: white;
+}
+
+.item-button .slds-button {
+    color: white; /* Ensure the text color is white */
+    background-color: blue; /* Ensure the button background is blue */
+    border: none; /* Remove any borders */
+}
+.custom-button {
+    margin-top: 2%;
+    height: 50px; /* Adjust as needed */
+    width: 200px; /* Adjust as needed */
+    font-size: 16px; /* Larger font size */
+}
+.rectangle-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rectangle {
+    border: 2px solid black; /* Border around the rectangle */
+    padding: 20px; /* Padding inside the rectangle */
+    border-radius: 5px; /* Optional: rounded corners */
+    background-color: #2dece8; /* Optional: background color inside the rectangle */
+    width: 100%; /* Full width to fit inside the table */
+    max-width: 800px; /* Adjust width as needed */
+    box-sizing: border-box; /* Ensure padding and border are included in width */
+    text-align: center; /* Center align text within the rectangle */
+}
+
+.rectangle-text {
+    font-size: 1em; /* Adjust font size as needed */
+    color: #333; /* Text color */
+}

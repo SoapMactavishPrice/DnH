@@ -1,0 +1,67 @@
+<apex:page controller="PurchaseOrderController" standardStylesheets="false" renderAs="pdf" applyHtmlTag="false" applyBodyTag="false" showHeader="false" docType="html-5.0">
+    <head>
+        <style>
+            @page {
+            size: A4;
+            
+            @bottom-left {
+            content: element(footer);
+            }
+            margin-bottom: 100px;
+            }
+            .FooterTable {
+            width: 100%;
+            border: 1px solid green;
+            border-collapse: collapse;
+            }
+            .footer {
+            font-size: 12px;
+            border: 1px solid black;
+            width: 100%;
+            }
+            
+            .left-align {
+            width: 60%;
+            display: inline-block;
+            text-align: left;
+            }
+            .center-align {
+            width: 40%;
+            display: inline-block;
+            Margin-bottom:10px;
+            vertical-align: center;
+            text-align: center;
+            float: right;
+            }
+            
+            div.footer {
+            line-height: 8px;
+            position: running(footer);
+            display: block;
+            }
+            
+        </style>
+    </head>
+    <body>
+        
+        <div class="footer" style="font-size:12px; Border: 1px solid Black ">
+            
+            <table class="FooterTable">
+                <tr><td>
+                    <span><strong> <u>Special terms / Conditions, If Any</u></strong></span>
+                    <span></span>
+                    
+                    <br/><br/><br/><br/><br/><br/><br/></td>
+                </tr>
+                <tr> 
+                    <td>
+                        <span class="left-align" ><strong>Prepared By :</strong></span>
+                        <span class="center-align"><strong>Authorised Signatory</strong></span>
+                    </td>
+                </tr>
+                
+                
+            </table>
+        </div>
+    </body>
+</apex:page>

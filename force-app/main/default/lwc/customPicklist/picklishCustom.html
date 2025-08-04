@@ -1,0 +1,19 @@
+<!-- <template>
+    <lightning-combobox field-level-help="Help text detailing the purpose and function of the combobox." name="Picklist"
+        label={typeAttributes.label}
+        message-when-value-missing="Optional message to be displayed when no option is selected and the required attribute is set."
+        options={typeAttributes.options} placeholder="Select Progress" value={typeAttributes.value} variant="standard"
+        onchange={handlePicklistChange}>
+    </lightning-combobox>
+</template> 
+onchange={handlePicklistChange} removed from below-->
+<template>
+    <lightning-combobox 
+        value={typeAttributes.value} 
+        placeholder={typeAttributes.placeholder}
+        options={typeAttributes.options} 
+        data-context={typeAttributes.context} 
+        onchange={handleChange}
+        label="AAAAA">
+    </lightning-combobox>
+</template>

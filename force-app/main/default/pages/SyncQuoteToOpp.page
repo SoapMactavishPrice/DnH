@@ -1,0 +1,4 @@
+<apex:page controller="SyncQuote" action="{!syncQuoteOpp}">
+    <apex:pageMessages />
+    
+</apex:page>

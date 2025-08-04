@@ -1,0 +1,230 @@
+<template>
+	<div if:true={showSpinner} class="exampleHolder">
+		<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+	</div>
+	<template if:true={mainContent}>
+		<lightning-card>
+			<div style="padding-left: 5px !important; font-size: 20px !important; font-weight: 500;">Service 7-(Sample
+				Feedback)</div>
+			<div style="border-bottom: 1px solid black;"></div>
+			<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12"
+				style="border-bottom: 1px solid black; border-top: 1px solid black;">
+				<div style="padding: 5px 0 5px 0; font-size: 16px; color: red;border-top: 1px solid black;
+							border-bottom: 1px solid black;margin-top: 11px;margin-left: 11px;">
+					General
+				</div>
+			</lightning-layout-item>
+			<div style="padding: 10px;">
+				<lightning-record-edit-form object-api-name="Service_7_Sample_Feedbacks__c" data-id="form1"
+					record-id={recordId} onsuccess={handleWorkDetailSuccess} onsubmit={handleWorkDetailSubmit}>
+					<lightning-messages></lightning-messages>
+					<lightning-layout multiple-rows>
+						<lightning-layout-item size="12" small-device-size="5" medium-device-size="5"
+							large-device-size="5" style="padding-left: 10px;">
+							<lightning-input-field name="Document No:" field-name="Name" read-only disabled>
+							</lightning-input-field>
+							<lightning-input-field name="Invoice No:" field-name="InvoiceNo__c" disabled>
+							</lightning-input-field>
+							<lightning-input-field name="Name Of Field Staff:" field-name="Name_of_Field_Staff"
+								style="padding-bottom: 10px !important;">
+							</lightning-input-field>
+							<lightning-input-field name="Sample Sales Order No:" field-name="SampleSalesOrderNumber__c"
+								style="padding-bottom: 10px !important;" disabled>
+							</lightning-input-field>
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="1" medium-device-size="1"
+							large-device-size="1">
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="5" medium-device-size="5"
+							large-device-size="5">
+							<lightning-input-field name="Date" field-name="Date__c" read-only disabled>
+							</lightning-input-field>
+							<lightning-input-field name="Invoice Date" field-name="Invoice_Date__c" read-only disabled>
+							</lightning-input-field>
+							<lightning-input-field name="Field Staff Email Id" field-name="End_Customer_Name__c"
+								style="padding-bottom: 10px !important;">
+							</lightning-input-field>
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="1" medium-device-size="1"
+							large-device-size="1">
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+							large-device-size="12" style="border-bottom: 1px solid black; border-top: 1px solid black;">
+							<div style="padding: 5px 0 5px 0; font-size: 16px; color: red;">
+								Dispatch Details
+							</div>
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="5" medium-device-size="5"
+							large-device-size="5" style="padding: 10px 0 0 10px;">
+							<lightning-input-field name="Docket No" field-name="Docket_No__c" read-only disabled>
+							</lightning-input-field>
+
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="1" medium-device-size="1"
+							large-device-size="1">
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="5" medium-device-size="5"
+							large-device-size="5" style="padding: 10px 0 0 0;">
+							<lightning-input-field name="Dispatch Date" field-name="Docket_Date__c" read-only disabled>
+							</lightning-input-field>
+
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="1" medium-device-size="1"
+							large-device-size="1">
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+							large-device-size="12" style="border-bottom: 1px solid black; border-top: 1px solid black;">
+							<div style="padding: 5px 0 5px 0; font-size: 16px; color: red;">
+								Item Details
+							</div>
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="5" medium-device-size="5"
+							large-device-size="5" style="padding: 10px 0 0 10px;">
+							<lightning-input-field name="Item No:" field-name="ItemNo__c" disabled>
+							</lightning-input-field>
+							<lightning-input-field name="Brand Name:" field-name="BrandName__c" disabled>
+							</lightning-input-field>
+							<lightning-input-field name="Batch No:" field-name="Batch_No__c" disabled>
+							</lightning-input-field>
+							<lightning-input-field style="margin-bottom: 0px !important;" name="UOM"
+								field-name="U_O_M__c" disabled>
+							</lightning-input-field>
+							<lightning-input-field style="margin-bottom: 0px !important;" name="Status of Order:"
+								field-name="StatusOfOrder__c" required>
+							</lightning-input-field>
+							<lightning-layout-item size="12" small-device-size="4" medium-device-size="4"
+								large-device-size="4" style="padding: 0px 0 0 10px;">
+								<div style="display: flex; align-items: center; justify-content: space-between;">
+									<label>Attachment</label>
+									<lightning-input type="file" accept={acceptedFormats}
+										onchange={handleMainFileUpload}>
+									</lightning-input>
+								</div>
+								<br />
+								<ul>
+									<template for:each={doc_MainFileArray} for:item="file">
+										<li style="text-align: center;" key={file.doc_MainFileName}>
+											{file.doc_MainFileName}
+										</li>
+									</template>
+								</ul>
+							</lightning-layout-item>
+
+							<!-- <lightning-input-field name="Attachment" field-name="Size_mm__c">
+							</lightning-input-field> -->
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="1" medium-device-size="1"
+							large-device-size="1">
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="5" medium-device-size="5"
+							large-device-size="5" style="padding: 10px 0 0 0;">
+							<lightning-input-field name="Item Description" field-name="Item_Description__c" disabled>
+							</lightning-input-field>
+							<lightning-input-field name="Size(mm)" field-name="Sizemm__c" disabled>
+							</lightning-input-field>
+							<lightning-input-field name="Qty(Pcs/Kgs)" field-name="Qty_Pcs_Kgs__c" disabled>
+							</lightning-input-field>
+							<lightning-input-field name="Previously Used Consumables"
+								field-name="Previously_Used_Consumables__c" required>
+							</lightning-input-field>
+							<lightning-input-field name="Test_Result_of_the_Samples__c"
+								field-name="Test_Result_of_the_Samples__c" required>
+							</lightning-input-field>
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="1" medium-device-size="1"
+							large-device-size="1">
+						</lightning-layout-item>
+						<!-- <lightning-layout-item size="12" small-device-size="4" medium-device-size="4" large-device-size="4"
+							style="padding: 0px 0 0 10px;">
+							<div style="display: flex; align-items: center; justify-content: space-between;">
+								<label>Attachment</label>
+								<lightning-input type="file" accept={acceptedFormats} onchange={handleFileUploaded1}>
+								</lightning-input>
+							</div>
+						</lightning-layout-item> -->
+						<lightning-layout-item size="12" small-device-size="8" medium-device-size="8"
+							large-device-size="8">
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+							large-device-size="12" style="border-bottom: 1px solid black; border-top: 1px solid black;">
+							<div style="padding: 5px 0 5px 0; font-size: 16px; color: red;">
+								Customer Info
+							</div>
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="5" medium-device-size="5"
+							large-device-size="5" style="padding: 10px 0 0 10px;">
+							<lightning-input-field name="Customer Name:" field-name="CustomerName__c" disabled>
+							</lightning-input-field>
+							<lightning-input-field name="Contact Person Designation:"
+								field-name="Contact_Person_Designation__c" required>
+							</lightning-input-field>
+							<lightning-input-field name="Email Id:" field-name="Email_Id__c">
+							</lightning-input-field>
+							<lightning-input-field name="Contact Person Address:"
+								field-name="Contact_Person_Address__c">
+							</lightning-input-field>
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="1" medium-device-size="1"
+							large-device-size="1">
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="5" medium-device-size="5"
+							large-device-size="5" style="padding: 10px 0 0 10px;">
+							<lightning-input-field name="Contact Person Name:" field-name="ContactPersonName__c"
+								required>
+							</lightning-input-field>
+							<lightning-input-field name="Testing Date:" field-name="Testing_Date__c" required>
+							</lightning-input-field>
+							<lightning-input-field name="Contact No:" field-name="Contact_No__c">
+							</lightning-input-field>
+							<lightning-input-field name="Remark" field-name="Remark__c">
+							</lightning-input-field>
+						</lightning-layout-item>
+						<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+							large-device-size="12" style="text-align: center;">
+							<!-- <lightning-button label="Save" title="Non-primary action"
+								class="slds-m-left_x-small"></lightning-button> -->
+							<lightning-button variant="Brand" label="Submit" type="submit" title="Primary action"
+								class="slds-m-left_x-small"></lightning-button>
+							<lightning-button variant="destructive-text" label="Cancel"
+								title="Destructive action with a lighter look" onclick={handleMainClick}
+								class="slds-m-left_x-small"></lightning-button>
+						</lightning-layout-item>
+					</lightning-layout>
+				</lightning-record-edit-form>
+			</div>
+		</lightning-card>
+	</template>
+	<template if:false={mainContent}>
+		<div>
+			<div class="showerror slds-p-around_medium" style="font-weight: 500;">
+				<div if:true={ResponseMessage} style="display: flex;align-items: center;">
+					<svg style="height: 50px;width: 40px;margin-right: 10px;" class="slds-icon slds-icon_x-small"
+						focusable="false" data-key="check" aria-hidden="true" height="40px" width="40px" version="1.1"
+						xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" xml:space="preserve">
+						<circle style="fill:#17a717;" cx="256" cy="256" r="256" />
+						<polygon style="fill:#fff;" points="230.288,365.04 137.456,292.528 157.152,267.312 223.04,318.768 329.984,161.28 
+					356.448,179.248 " />
+					</svg>
+					{ResponseMessage}
+				</div>
+				<div if:true={errorResponseMessage} style="display: flex;align-items: center;">
+					<svg style="height: 50px;width: 40px;margin-right: 10px;" width="40px" height="40px"
+						viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+						<g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"
+							sketch:type="MSPage">
+							<g id="Icon-Set-Filled" sketch:type="MSLayerGroup"
+								transform="translate(-570.000000, -1089.000000)" fill="red">
+								<path
+									d="M591.657,1109.24 C592.048,1109.63 592.048,1110.27 591.657,1110.66 C591.267,1111.05 590.633,1111.05 590.242,1110.66 L586.006,1106.42 L581.74,1110.69 C581.346,1111.08 580.708,1111.08 580.314,1110.69 C579.921,1110.29 579.921,1109.65 580.314,1109.26 L584.58,1104.99 L580.344,1100.76 C579.953,1100.37 579.953,1099.73 580.344,1099.34 C580.733,1098.95 581.367,1098.95 581.758,1099.34 L585.994,1103.58 L590.292,1099.28 C590.686,1098.89 591.323,1098.89 591.717,1099.28 C592.11,1099.68 592.11,1100.31 591.717,1100.71 L587.42,1105.01 L591.657,1109.24 L591.657,1109.24 Z M586,1089 C577.163,1089 570,1096.16 570,1105 C570,1113.84 577.163,1121 586,1121 C594.837,1121 602,1113.84 602,1105 C602,1096.16 594.837,1089 586,1089 L586,1089 Z"
+									id="cross-circle" sketch:type="MSShapeGroup">
+								</path>
+							</g>
+						</g>
+					</svg>
+					{errorResponseMessage}
+				</div>
+
+			</div>
+		</div>
+	</template>
+</template>

@@ -1,0 +1,293 @@
+<template>
+	<div if:true={showSpinner} class="exampleHolder">
+		<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+	</div>
+	<lightning-card>
+		<div style="padding-left: 5px !important; font-size: 20px !important; font-weight: 500;">
+			Create Service 19-(Customer Complaints)
+		</div>
+		<div style="border-bottom: 1px solid black;"></div>
+		<div style="padding: 10px;">
+			<lightning-record-edit-form object-api-name="Customer_Complaint__c" record-id={recordId}
+				onsubmit={handleComplaintSubmit} onsuccess={handleComplaintSuccess} onerror={handleComplaintError}
+				data-id="form1">
+				<lightning-layout multiple-rows>
+					<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5"
+						style="padding-left: 10px;">
+						<lightning-input-field field-name="Name" label="Document No" value={displayLabel} disabled>
+						</lightning-input-field>
+						<lightning-input-field name="Invoice No" field-name="Invoice_No__c"
+							value={selectedInvoiceData.DocNo} disabled>
+						</lightning-input-field>
+						<lightning-input-field name="Dealer Name" if:false={recordId} field-name="Account__c"
+							value={Customer_Value} style="padding-bottom: 10px !important;" disabled>
+						</lightning-input-field>
+						<lightning-input-field name="Dealer Name" if:true={recordId} field-name="Account__c"
+							style="padding-bottom: 10px !important;" disabled>
+						</lightning-input-field>
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="1" medium-device-size="1" large-device-size="1">
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5">
+						<lightning-input-field name="Date" field-name="Date__c" disabled>
+						</lightning-input-field>
+						<lightning-input-field name="Invoice Date" field-name="InvoiceDate__c"
+							value={selectedInvoiceData.InvoiceDate} disabled>
+						</lightning-input-field>
+						<lightning-input-field name="End Customer Name" field-name="EndCustomerName__c"
+							style="padding-bottom: 10px !important;" required disabled={disabledFieldFlag}>
+						</lightning-input-field>
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="1" medium-device-size="1" large-device-size="1">
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+						large-device-size="12" style="border-bottom: 1px solid black; border-top: 1px solid black;">
+						<div style="padding: 5px 0 5px 0; font-size: 16px; color: red;">
+							Product Details
+						</div>
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5"
+						style="padding: 10px 0 0 10px;">
+						<lightning-input-field name="Item No" field-name="ItemNo__c"
+							value={selectedInvoiceLineData.ItemNo} disabled>
+						</lightning-input-field>
+						<lightning-input-field name="Batch No" field-name="Batch_No__c"
+							value={selectedInvoiceLotData.LotNo} disabled>
+						</lightning-input-field>
+						<lightning-input-field name="Batch Quantity" field-name="Batch_Quantity__c"
+							value={selectedInvoiceLotData.BatchQuantity} disabled>
+						</lightning-input-field>
+						<lightning-input-field name="UOM" field-name="U_O_M__c" value={selectedInvoiceLineData.UOM}
+							disabled>
+						</lightning-input-field>
+						<lightning-input-field name="Line" field-name="Line_No__c"
+							value={selectedInvoiceLineData.LineNo} disabled>
+						</lightning-input-field>
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="1" medium-device-size="1" large-device-size="1">
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5"
+						style="padding: 10px 0 0 0;">
+						<lightning-input-field name="Brand No" field-name="Brand_Name__c"
+							value={selectedInvoiceLineData.ItemBrand} disabled>
+						</lightning-input-field>
+						<lightning-input-field name="Mfg Date" field-name="Mfg_Date__c"
+							value={selectedInvoiceLotData.MfgDate} disabled>
+						</lightning-input-field>
+						<lightning-input-field name="Complaint Quantity" field-name="Complaint_Quantity__c"
+							onchange={handlerComplaintQtyChange} disabled={disabledFieldFlag} data-id="complaintQTY"
+							required>
+						</lightning-input-field>
+						<lightning-input-field name="Size(mm)" field-name="Size_mm__c"
+							value={selectedInvoiceLineData.SIZE} disabled>
+						</lightning-input-field>
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="1" medium-device-size="1" large-device-size="1">
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+						large-device-size="12" style="border-bottom: 1px solid black; border-top: 1px solid black;">
+						<div style="padding: 5px 0 5px 0; font-size: 16px; color: red;">
+							User Input
+						</div>
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5"
+						style="padding: 10px 0 0 10px;">
+						<lightning-input-field name="Type Of Complaints" field-name="Type_Of_Complaints__c"
+							disabled={disabledFieldFlag} required>
+						</lightning-input-field>
+						<lightning-input-field name="Verification End To Customer"
+							field-name="Verification_End_To_Customer__c" disabled={disabledFieldFlag}>
+						</lightning-input-field>
+						<lightning-input-field name="Field Engineer Name" if:false={recordId}
+							field-name="Field_Engineer_Name__c" value={FieldEngineer_Value} disabled required>
+						</lightning-input-field>
+						<lightning-input-field name="Field Engineer Name" if:true={recordId}
+							field-name="Field_Engineer_Name__c" disabled required>
+						</lightning-input-field>
+						<lightning-input-field style="margin-bottom: 0px !important;" if:false={recordId}
+							name="Zonal Head" field-name="Zonal_Head__c" value={ZonalManager_Value} disabled required>
+						</lightning-input-field>
+						<lightning-input-field style="margin-bottom: 0px !important;" if:true={recordId}
+							name="Zonal Head" field-name="Zonal_Head__c" disabled required>
+						</lightning-input-field>
+						<!-- <lightning-input-field name="Attachment" field-name="Size_mm__c">
+						</lightning-input-field> -->
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="1" medium-device-size="1" large-device-size="1">
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="5" medium-device-size="5" large-device-size="5"
+						style="padding: 10px 0 0 0;">
+						<lightning-input-field name="Entry Type" field-name="Entry_Type__c" value="0"
+							disabled={disabledFieldFlag}>
+						</lightning-input-field>
+						<lightning-input-field name="Recommendations" field-name="Recommendations__c"
+							disabled={disabledFieldFlag}>
+						</lightning-input-field>
+						<lightning-input-field name="Area Manager" if:false={recordId} field-name="Area_Manager__c"
+							value={AreaManager_Value} disabled required>
+						</lightning-input-field>
+						<lightning-input-field name="Area Manager" if:true={recordId} field-name="Area_Manager__c"
+							disabled required>
+						</lightning-input-field>
+						<lightning-input-field name="Field Engineer Remarks" field-name="Field_Engineer_Remarks__c"
+							disabled={disabledFieldFlag} required>
+						</lightning-input-field>
+						<lightning-input-field class="SalesPersonConfirmation" name="Sales Person Confirmation"
+							if:false={showActionButtons} field-name="SalesPersonConfirmation__c" required>
+						</lightning-input-field>
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="1" medium-device-size="1" large-device-size="1">
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="4" medium-device-size="4" large-device-size="4"
+						style="padding: 0px 0 0 10px;">
+						<div style="display: flex; align-items: center; justify-content: space-between;">
+							<label>Attachment</label>
+							<lightning-input type="file" multiple="true" accept={acceptedFormats}
+								onchange={handleFileUploaded1}>
+							</lightning-input>
+						</div>
+						<br />
+						<ul>
+							<template for:each={doc_MainFileArray} for:item="file">
+								<li style="text-align: center;" key={file.doc_MainFileName}>{file.doc_MainFileName}</li>
+							</template>
+						</ul>
+					</lightning-layout-item>
+					<lightning-layout-item size="12" small-device-size="8" medium-device-size="8" large-device-size="8">
+					</lightning-layout-item>
+					<template if:false={showActionButtons}>
+						<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+							large-device-size="12" style="text-align: center;">
+							<!-- <lightning-button variant="Brand" label="Close" title="Primary action" type="submit"
+								class="slds-m-left_x-small"></lightning-button>
+							<lightning-button variant="Brand" label="Reopen" title="Primary action" type="submit"
+								class="slds-m-left_x-small"></lightning-button> -->
+
+							<lightning-button variant="Brand" label="Close" type="button" title="Primary action"
+								class="slds-m-left_x-small" data-btnname="closebtn"
+								onclick={handleComplaintSubmit}></lightning-button>
+							<lightning-button variant="Brand" label="Reopen" type="button" title="Primary action"
+								class="slds-m-left_x-small" data-btnname="reopenbtn"
+								onclick={handleComplaintSubmit}></lightning-button>
+
+						</lightning-layout-item>
+					</template>
+					<template if:true={showActionButtons}>
+						<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+							large-device-size="12" style="text-align: center;">
+							<lightning-button variant="Brand" label="Save as Draft" type="button"
+								data-btnname="draftbtn" class="slds-m-left_x-small"
+								onclick={handleComplaintSubmit}></lightning-button>
+							<lightning-button variant="Brand" label="Submit" type="button" data-btnname="submitbtn"
+								class="slds-m-left_x-small" onclick={handleComplaintSubmit}></lightning-button>
+							<lightning-button variant="destructive-text" label="Cancel"
+								title="Destructive action with a lighter look" onclick={handleClick}
+								class="slds-m-left_x-small"></lightning-button>
+						</lightning-layout-item>
+					</template>
+				</lightning-layout>
+			</lightning-record-edit-form>
+		</div>
+	</lightning-card>
+
+	<template if:true={isModalOpen}>
+		<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+			aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+			<!-- <div class="slds-modal__container" style="width: 35% !important; max-width: 35rem;"> -->
+			<div class={modalContainerClass}>
+				<!-- Modal/Popup Box LWC header here -->
+				<header class="slds-modal__header">
+					<!-- <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"
+						onclick={handlerCloseAddService19}>
+						<lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small">
+						</lightning-icon>
+						<span class="slds-assistive-text">Close</span>
+					</button> -->
+					<h2 id="modal-heading-04" class="slds-text-heading_medium slds-hyphenate">
+						Select Sales Invoice (Customer Complaints)
+					</h2>
+				</header>
+				<div class="slds-modal__content slds-var-p-around_medium" id="modal-content-id-5"
+					style="padding-top: 0px !important">
+					<div style="margin-right: 30px;margin-left:30px;">
+						<div if:true={showSpinner2} class="exampleHolder">
+							<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+						</div>
+						<lightning-card>
+							<lightning-layout multiple-rows>
+								<lightning-layout-item size="12" small-device-size="4" medium-device-size="4"
+									large-device-size="4">
+									<div style="padding-top: 20px;">
+										From Date <br /> (mm/dd/yyyy)
+									</div>
+								</lightning-layout-item>
+								<lightning-layout-item size="12" small-device-size="8" medium-device-size="8"
+									large-device-size="8">
+									<lightning-input type="date" value={fromDateValue} name="fromdate"
+										onchange={handlerDateChange}>
+									</lightning-input>
+								</lightning-layout-item>
+								<lightning-layout-item size="12" small-device-size="4" medium-device-size="4"
+									large-device-size="4">
+									<div style="padding-top: 20px;">
+										To Date <br /> (mm/dd/yyyy)
+									</div>
+								</lightning-layout-item>
+								<lightning-layout-item size="12" small-device-size="8" medium-device-size="8"
+									large-device-size="8">
+									<lightning-input type="date" value={toDateValue} name="todate"
+										onchange={handlerDateChange}>
+									</lightning-input>
+								</lightning-layout-item>
+								<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+									large-device-size="12"
+									style="padding-top: 15px; display: flex; justify-content: end;">
+									<lightning-button label="Search" onclick={handlerSearchInvoice}>
+									</lightning-button>
+								</lightning-layout-item>
+								<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+									large-device-size="12" style="padding-top: 15px">
+									<lightning-combobox label="Select Invoice No" name="invoiceno"
+										value={invoiceNumberValue} options={InvoiceOptions}
+										onchange={handlerInvoiceChange} placeholder="Select">
+									</lightning-combobox>
+								</lightning-layout-item>
+								<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+									large-device-size="12" style="padding-top: 15px">
+									<lightning-combobox label="Select Sales Line Item-Variant"
+										name="saleslineitemvariant" value={invoiceLineValue}
+										options={InvoiceLineOptions} onchange={handlerInvoiceLineChange}
+										placeholder="Select">
+									</lightning-combobox>
+								</lightning-layout-item>
+								<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+									large-device-size="12" style="padding-top: 15px">
+									<lightning-combobox label="Select Batch" name="selectbatch" value={invoiceLotValue}
+										options={InvoiceLotOptions} onchange={handlerInvoiceLotChange}
+										placeholder="Select">
+									</lightning-combobox>
+								</lightning-layout-item>
+								<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+									large-device-size="12" style="text-align: center; padding-top: 20px">
+									<!-- <lightning-button label="Back" title="Non-primary action"
+										class="slds-m-left_x-small"></lightning-button> -->
+									<lightning-button variant="Brand" label="Proceed"
+										title="Destructive action with a lighter look" class="slds-m-left_x-small"
+										onclick={handlerOnProceedClick} disabled={proceedBtnFlag}></lightning-button>
+								</lightning-layout-item>
+							</lightning-layout>
+						</lightning-card>
+					</div>
+				</div>
+
+				<!-- <footer class="slds-modal__footer">
+          <button class="slds-button slds-button_neutral" onclick={navigateToRecordPage} title="NO">Cancel</button>
+          <button class="slds-button slds-button_brand" onclick={handleSelectedTransferRequestDetail}
+            title="OK">Save</button>
+        </footer> -->
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+
+</template>
