@@ -30,6 +30,8 @@ export default class LookupComponent extends LightningElement {
   @api defaultRecordId = '';
   @api disabled = false;
   @api searchWithMiddle = false;
+  @api tempId;
+  @api value;
   @track displayFieldsList = [];
 
 
@@ -49,6 +51,8 @@ export default class LookupComponent extends LightningElement {
   connectedCallback() {
     console.log('connectedCallback');
     console.log('this.defaultRecordId', this.defaultRecordId);
+
+    
 
     if (this.displayFields != null && this.displayFields != '') {
       this.displayFieldsList = this.displayFields.split(',');
@@ -173,7 +177,8 @@ export default class LookupComponent extends LightningElement {
         rowid: this.rowid,
         index: this.index,
         index_x: this.index_x,
-        index_y: this.index_y
+        index_y: this.index_y,
+        tempid: this.tempId
       }
     });
     this.dispatchEvent(passEventr);

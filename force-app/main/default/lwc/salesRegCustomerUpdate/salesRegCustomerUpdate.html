@@ -33,8 +33,8 @@
                             <th class="slds-text-align_center" scope="col">Sales Order No</th>
                             <th class="slds-text-align_center" scope="col">Item Name</th>
                             <th class="slds-text-align_center" scope="col">Net Invoice value</th>
+                            <th class="slds-text-align_center" scope="col">Quantity</th>
                             <th class="slds-text-align_center" scope="col">Action</th>
-                            <!-- <th class="slds-text-align_center" scope="col">End Customer</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -46,8 +46,9 @@
                                 <td if:true={salesRegister.itemNoName} class="slds-text-align_center">
                                     {salesRegister.itemNoName}</td>
                                 <td class="slds-text-align_center">{salesRegister.netInvoiceValue}</td>
+                                <td class="slds-text-align_center">{salesRegister.quantity}</td>
                                 <!-- <td class="slds-text-align_left">
-                                    <c-lookup-component object-api-name="Account" icon-name="standard:account"
+                                    <c-lookup-component object-api-name="Account" icon-name="standard:account" default-record-id={salesRegister.id}
                                         rowid={salesRegister.id} index={salesRegister.id} index_x={salesRegister.id}
                                         return-fields="Customer_Type__c" sort-column="Name" display-fields=""
                                         query-fields="['Name']" onrecordselection={handleAccountChange}
@@ -62,26 +63,36 @@
                             </tr>
 
                             <template if:true={salesRegister.lineItems}>
-                                <tr key={salesRegister.id}>
-                                    <th>End Customer</th>
-                                    <th>Net Invoice</th>
-                                    <th>Quantity</th>
+                                <tr key={salesRegister.key}>
+                                    <th></th>
+                                    <th></th>
+                                    <th class="slds-text-align_center" scope="col" style="font-weight: bold;">End Customer</th>
+                                    <th class="slds-text-align_center" scope="col" style="font-weight: bold;">Net Invoice</th>
+                                    <th class="slds-text-align_center" scope="col" style="font-weight: bold;">Quantity</th>
+                                    <th class="slds-text-align_center" scope="col" style="font-weight: bold;">Action</th>
                                 </tr>
                                 <template for:each={salesRegister.lineItems} for:item="eachLineItem">
                                     <tr key={eachLineItem.tempId}>
-                                        <td>
-                                            <c-lookup-component object-api-name="Account" icon-name="standard:account"
-                                                rowid={salesRegister.id} index={salesRegister.id} index_x={salesRegister.id}
+                                        <td></td>
+                                        <td></td>
+                                        <td class="slds-text-align_center">
+                                            <c-lookup-component object-api-name="Account" icon-name="standard:account" default-record-id={eachLineItem.endCustomer} 
+                                                rowid={salesRegister.id} index={salesRegister.id} index_x={salesRegister.id} temp-id={eachLineItem.tempId}
                                                 return-fields="Customer_Type__c" sort-column="Name" display-fields=""
                                                 query-fields="['Name']" onrecordselection={handleAccountChange}
                                                 onfocus={handleAccountChange}>
                                             </c-lookup-component>
                                         </td>
-                                        <td>
-                                            <lightning-input type="number" value={eachLineItem.netInvoiceValue} onchange={handleChildItemChange} data-id="netInvoiceValue"></lightning-input>
+                                        <td class="slds-text-align_center">
+                                            <lightning-input type="number" value={eachLineItem.netInvoiceValue} data-field="netInvoiceValue" data-tempid={eachLineItem.tempId} data-parent={salesRegister.id} variant="label-hidden" disabled></lightning-input>
                                         </td>
-                                        <td>
-                                            <lightning-input type="number" value={eachLineItem.quantity} onchange={handleChildItemChange} data-id="quantity"></lightning-input>
+                                        <td class="slds-text-align_center">
+                                            <lightning-input type="number" value={eachLineItem.quantity} onchange={handleLineItemChanges} data-field="quantity" data-tempid={eachLineItem.tempId} data-parent={salesRegister.id} variant="label-hidden"></lightning-input>
+                                        </td>
+                                        <td class="slds-text-align_center">
+                                            <lightning-button-icon icon-name="utility:delete" alternative-text="Delete" data-parent={salesRegister.id}
+                                                onclick={removeLineItem} data-index={eachLineItem.index} data-tempid={eachLineItem.tempId} disabled={eachLineItem.isOld}>
+                                            </lightning-button-icon>
                                         </td>
                                     </tr>
                                 </template>
@@ -95,7 +106,7 @@
                 <lightning-layout>
                     <lightning-layout-item size="12" class="slds-p-around_medium slds-text-align_center">
                         <lightning-button variant="brand" label="Save" title="Save"
-                            onclick={handleUpdateSalesRegisters}>
+                            onclick={saveLineItem} disabled={isSaveDisabled}>
                         </lightning-button>
                     </lightning-layout-item>
                 </lightning-layout>

@@ -3,11 +3,13 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import getCurrentActiveFY from "@salesforce/apex/SalesRegCustomerUpdateCtrl.getCurrentActiveFY";
 import getSalesRegisterData from "@salesforce/apex/SalesRegCustomerUpdateCtrl.getSalesRegisterData";
 import updateSalesRegisters from "@salesforce/apex/SalesRegCustomerUpdateCtrl.updateSalesRegisters";
+import saveSalesRegisterLineItem from "@salesforce/apex/SalesRegCustomerUpdateCtrl.saveSalesRegisterLineItem";
 
 export default class SalesRegCustomerUpdate extends LightningElement {
     @track currentFiscalYearName = '';
     @track currentFiscalYearValue = '';
     @track monthValue = '';
+    @track isSaveDisabled = false;
     @track salesRegisterObjects = [];
 
     monthOptions = [
@@ -37,8 +39,9 @@ export default class SalesRegCustomerUpdate extends LightningElement {
         getCurrentActiveFY()
             .then(result => {
                 let data = JSON.parse(result);
+                console.log('getCurrentActiveFY result ->', data);
                 this.currentFiscalYearName = data.Name;
-                this.currentFiscalYearValue = data.id;
+                this.currentFiscalYearValue = data.Id;
             })
             .catch(error => {
                 this.showError(error);
@@ -51,6 +54,7 @@ export default class SalesRegCustomerUpdate extends LightningElement {
     }
 
     handleGetData() {
+        console.log('currentFiscalYearValue', this.currentFiscalYearValue);
         getSalesRegisterData({
             fyId: this.currentFiscalYearValue,
             month: this.monthValue
@@ -64,6 +68,30 @@ export default class SalesRegCustomerUpdate extends LightningElement {
             });
     }
 
+    validateSalesRegisterLineItem(salesRegisterId) {
+        let specificParentData = this.salesRegisterObjects.find(salesRegister => salesRegister.id === salesRegisterId);
+
+        if (specificParentData.lineItems != null) {
+            for (let eachItem of specificParentData.lineItems) {
+                if (!eachItem.endCustomer) {
+                    this.showToast('Error', 'Please select a End Customer for Line Item', 'error');
+                    return false;
+                }
+
+                if (!eachItem.netInvoiceValue || eachItem.netInvoiceValue == 0) {
+                    this.showToast('Error', 'Please enter Net Invoice Value for Line Item', 'error');
+                    return false;
+                }
+
+                if (!eachItem.quantity || eachItem.quantity == 0) {
+                    this.showToast('Error', 'Please enter Quantity for Line Item', 'error');
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     addLineItem(event) {
         let parentId = event.target.dataset.parent;
         console.log('parentId -->', parentId);
@@ -72,29 +100,76 @@ export default class SalesRegCustomerUpdate extends LightningElement {
         if (!specificParentData.lineItems) {
             specificParentData.lineItems = [];
         }
-        specificParentData.lineItems.push({
-            tempId: Date.now().toString() + Math.random().toString(16).slice(2),
-            id: '',
-            endCustomer: '',
-            netInvoiceValue: '',
-            quantity: 0
-        })
+        let result = this.validateSalesRegisterLineItem(parentId);
+        if (result) {
+            specificParentData.lineItems.push({
+                tempId: Date.now().toString() + Math.random().toString(16).slice(2),
+                id: '',
+                endCustomer: '',
+                netInvoiceValue: '',
+                quantity: 0,
+                isNew: true,
+                isOld: false
+            })
+        }
 
         console.log(' after line Item specificParentData -->', JSON.parse(JSON.stringify(specificParentData)));
 
         console.log('this.salesRegisterObjects', JSON.parse(JSON.stringify(this.salesRegisterObjects)));
     }
 
+    removeLineItem(event) {
+        let tempId = event.target.dataset.tempid;
+        let parentId = event.target.dataset.parent;
+
+        let specificParentData = this.salesRegisterObjects.find(salesRegister => salesRegister.id === parentId);
+
+        specificParentData.lineItems = specificParentData.lineItems.filter(lineItem => lineItem.tempId !== tempId);
+
+        if (specificParentData.lineItems.length === 0) {
+            delete specificParentData.lineItems;
+        }
+    }
+
     handleAccountChange(event) {
         const salesRegId = event.detail.rowid;
         const custId = event.detail.selectedRecordId;
 
-        let draft = this.draftValues.find(d => d.id === salesRegId);
-        if (!draft) {
-            draft = { id: salesRegId };
-            this.draftValues.push(draft);
+        let tempId = event.detail.tempid;
+        
+        let specificParentData = this.salesRegisterObjects.find(salesRegister => salesRegister.id === salesRegId);
+
+        let lineItem = specificParentData.lineItems.find(lineItem => lineItem.tempId === tempId);
+
+        lineItem.endCustomer = custId;
+    }
+
+    handleLineItemChanges(event) {
+        try {
+            let field = event.target.dataset.field;
+            let salesRegId = event.target.dataset.parent;
+            let tempId = event.target.dataset.tempid;
+
+            let value = event.target.value;
+    
+            let specificParentData = this.salesRegisterObjects.find(salesRegister => salesRegister.id === salesRegId);
+
+            if (field == 'quantity' && specificParentData.rate != null && specificParentData.rate) {
+                let rate = specificParentData.rate;
+
+                let lineItem = specificParentData.lineItems.find(lineItem => lineItem.tempId === tempId);
+    
+                lineItem[field] = value;
+
+                lineItem.netInvoiceValue = value * rate;
+            } 
+    
+            let lineItem = specificParentData.lineItems.find(lineItem => lineItem.tempId === tempId);
+    
+            lineItem[field] = value;
+        } catch (error) {
+            console.error('error in handleLineItemChanges', error);
         }
-        draft['End_Customer__c'] = custId;
     }
 
     handleUpdateSalesRegisters() {
@@ -112,6 +187,73 @@ export default class SalesRegCustomerUpdate extends LightningElement {
             .catch(error => this.showError(error));
     }
 
+    validateSalesRegister() {
+        for (let eachSalesRegister of this.salesRegisterObjects) {
+            let result = this.validateSalesRegisterLineItem(eachSalesRegister.id);
+            if (!result) {
+                return false;
+            }
+
+            if (eachSalesRegister.lineItems && eachSalesRegister.lineItems.length > 0) {
+                let parentNetInvoiceValue = parseFloat(eachSalesRegister.netInvoiceValue);
+                console.log('parentNetInvoiceValue', parentNetInvoiceValue);
+                let parentQuantity = parseFloat(eachSalesRegister.quantity);
+                console.log('parentQuantity', parentQuantity);
+                let lineTotalInvoiceValue = 0;
+                let lineTotalQuantity = 0;
+    
+                for (let eachLineItem of eachSalesRegister.lineItems) {
+                    lineTotalInvoiceValue += parseFloat(eachLineItem.netInvoiceValue);
+                    lineTotalQuantity += parseFloat(eachLineItem.quantity);
+                }
+
+                console.log('lineTotalInvoiceValue' ,lineTotalInvoiceValue);
+                console.log('lineTotalQuantity' ,lineTotalQuantity);
+    
+                // if (lineTotalInvoiceValue > parentNetInvoiceValue) {
+                //     this.showToast('Error', 'Sales Register Line Total Invoice Value cannot be greater than Sales Register Invoice Value - ' + eachSalesRegister.salesOrderNo, 'error');
+                //     return false;
+                // }
+    
+                if (lineTotalQuantity > parentQuantity) {
+                    this.showToast('Error', 'Sales Register Line Total Quantity cannot be greater than Sales Register Quantity - ' + eachSalesRegister.salesOrderNo, 'error');
+                    return false;
+                }
+            }
+
+
+        }
+
+        return true;
+    }
+
+    saveLineItem() {
+        this.isSaveDisabled = true;
+
+        let result = this.validateSalesRegister();
+
+        console.log('final Save Data', JSON.parse(JSON.stringify(this.salesRegisterObjects)));
+
+        if (result) {
+            saveSalesRegisterLineItem({salesRegisterStringObj: JSON.stringify(this.salesRegisterObjects)})
+                .then((result)=>{
+                    if (result == 'Success') {
+                        this.showToast('Success', 'Saved Successfully', 'success');
+    
+                        setTimeout(()=>{
+                            window.location.reload();
+                        }, 1500)
+                    }
+                }).catch((error)=>{
+                    this.isSaveDisabled = false;
+                    this.showError(error);
+                })
+        } else {
+            this.isSaveDisabled = false;
+        }
+
+    }
+
     showToast(title, message, variant) {
         this.dispatchEvent(new ShowToastEvent({ title, message, variant }));
     }
@@ -119,7 +261,7 @@ export default class SalesRegCustomerUpdate extends LightningElement {
     showError(error) {
         this.dispatchEvent(new ShowToastEvent({
             title: 'Error',
-            message: error.message,
+            message: error.body.message,
             variant: 'error'
         }));
     }
