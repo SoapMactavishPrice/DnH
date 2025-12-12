@@ -44,13 +44,13 @@ public class S7_SalesInvoiceHeader {
         
                 // Get the root element of the SOAP Body
                 Dom.XMLNode soapBody = doc.getRootElement().getChildElement('Body', 'http://schemas.xmlsoap.org/soap/envelope/');
-                System.debug(soapBody);
+                // System.debug(soapBody);
                 
                 Dom.XmlNode response = soapBody.getChildElement('InsertGetSalesInvoiceHeaderServices7_Result', 'urn:microsoft-dynamics-schemas/codeunit/SalesForceIntegration');
-                System.debug('responseLog '+ response);
+                // System.debug('responseLog '+ response);
                 Dom.XmlNode responseLog = response.getChildElement('return_value', 'urn:microsoft-dynamics-schemas/codeunit/SalesForceIntegration');
                 Dom.XmlNode returnValueLog = response.getChildElement('returnValue', 'urn:microsoft-dynamics-schemas/codeunit/SalesForceIntegration');
-                System.debug('responseLog '+ responseLog.getText());
+                // System.debug('responseLog '+ responseLog.getText());
                 System.debug('returnValueLog '+ returnValueLog.getText());
                 // Extract the text content of the responseLog element
 
@@ -60,7 +60,7 @@ public class S7_SalesInvoiceHeader {
 
                     // Extract the JSON string
                     String jsonString = returnValueLogContent;
-                    System.debug('Extracted JSON: ' + jsonString);
+                    // System.debug('Extracted JSON: ' + jsonString);
 
                     // Parse the JSON string into a list of objects
                     List<InvoiceData> invoiceList = (List<InvoiceData>) JSON.deserialize(jsonString, List<InvoiceData>.class);
@@ -90,8 +90,9 @@ public class S7_SalesInvoiceHeader {
                     List<Invoice__c> insertInvoiceList = new List<Invoice__c>();
                     // Debug the parsed list
                     for (InvoiceData invoice : invoiceList) {
-                        System.debug('Invoice DATA: ' + invoice);
-                        if (!invNumSet2.contains(invoice.DocNo)) {
+                        System.debug('Invoice DATA: ' + invoice.DocNo);
+                        System.debug('Check Existing: ' + invNumSet2.contains(invoice.DocNo));
+                        if (!invNumSet2.contains(invoice.DocNo) && usrCode == invoice.FieldEngineer) {
                             Invoice__c inv = new Invoice__c();
                             inv.Name = invoice.DocNo;
                             inv.Doc_No__c = invoice.DocNo;

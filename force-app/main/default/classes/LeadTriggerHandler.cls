@@ -61,4 +61,30 @@ public class LeadTriggerHandler {
             }
         }
     }
+    
+    public static void handleStatusDate(List<Lead__c> newList, Map<Id, Lead__c> oldMap) {
+        
+        for (Lead__c ld : newList) {
+            
+            // Insert logic
+            if (oldMap == null || !oldMap.containsKey(ld.Id)) {
+                if (ld.Lead_Status__c == 'New') {
+                    ld.New_Status_Date__c  = Date.today();
+                }
+                continue;
+            }
+            
+            // Update logic
+            Lead__c oldLead = oldMap.get(ld.Id);
+            
+            // If status changed to NEW, set date
+            if (ld.Lead_Status__c == 'New' && oldLead.Lead_Status__c != 'New') {
+                ld.New_Status_Date__c  = Date.today();
+            }
+            
+            // If moved out of New, do nothing
+            // If staying in New, do nothing
+        }
+    }
+    
 }

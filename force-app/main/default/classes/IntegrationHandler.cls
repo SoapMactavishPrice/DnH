@@ -106,7 +106,10 @@ public with sharing class IntegrationHandler {
         List < Map < String, Object >> mpList = new List < Map < String, Object >> ();
         Map < String, Object > salesOrder = new Map < String, Object > ();
         salesOrder.put('CustomerNo', acc.Customer_Code__c);
-        salesOrder.put('EndCustomerName', ord.End_Customer_Name__c);
+        salesOrder.put('EndCustomerName', '');
+        if (ord.EndCustomer__c != null) {
+            salesOrder.put('EndCustomerName', ord.EndCustomer__r.Name);
+        }
         if (ord.Order_Booking_Date__c != null) {
             Date myDate = Date.valueOf(ord.Order_Booking_Date__c);
             String formattedDate = String.valueOf(myDate.year()) + '-' + (myDate.month() < 10 ? '0' : '') + String.valueOf(myDate.month()) + '-' + (myDate.day() < 10 ? '0' : '') + String.valueOf(myDate.day());

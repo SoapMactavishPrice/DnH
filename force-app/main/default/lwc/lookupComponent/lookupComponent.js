@@ -52,7 +52,7 @@ export default class LookupComponent extends LightningElement {
     console.log('connectedCallback');
     console.log('this.defaultRecordId', this.defaultRecordId);
 
-    
+    this.selectedRecordId = this.value;
 
     if (this.displayFields != null && this.displayFields != '') {
       this.displayFieldsList = this.displayFields.split(',');

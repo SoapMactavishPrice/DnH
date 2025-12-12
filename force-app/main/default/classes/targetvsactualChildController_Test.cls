@@ -19,9 +19,9 @@ public class targetvsactualChildController_Test {
         insert productCategories;
 
         // Create Products
-        List<Product2> products = new List<Product2> {
-            new Product2(Name = 'VOXCO CHROME ORANGE VO-750/SA', Family = 'VO'),
-            new Product2(Name = 'VOXCO ZINC PHOSPHATE', Family = 'Anti-Corrosive')
+        List<Item_Master__c> products = new List<Item_Master__c> {
+            new Item_Master__c(Name = 'TestTest'),
+            new Item_Master__c(Name = 'TESTTTT')
         };
         insert products;
 

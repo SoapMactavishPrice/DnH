@@ -48,8 +48,8 @@ public class NMD_ItemTest {
 
         // Call the method
         NMD_Item itemService = new NMD_Item();
-       // String jsonResponse = itemService.getItemDataAsJson();
-       NMD_Item.getItemDataAsJson();
+       String jsonResponse = itemService.getItemDataAsJson();
+    //    NMD_Item.getItemDataAsJson();
 	   NMD_Item.fakeCodeCoverage();
         // Stop the test context
         Test.stopTest();
@@ -75,8 +75,8 @@ public class NMD_ItemTest {
 
         // Call the method
         NMD_Item itemService = new NMD_Item();
-       // String jsonResponse = itemService.getItemDataAsJson();
-       NMD_Item.getItemDataAsJson();
+       String jsonResponse = itemService.getItemDataAsJson();
+    //    NMD_Item.getItemDataAsJson();
         // Stop the test context
         Test.stopTest();
 

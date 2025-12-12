@@ -695,6 +695,12 @@ export default class CreateSalesOrder extends NavigationMixin(LightningElement) 
 			this.accountDetail.add = tdata.add;
 			this.accountDetail.add2 = tdata.add2;
 			this.shipmentCodeValue = tdata.id;
+			let d = {
+				target: {
+					value: this.shipmentCodeValue
+				}
+			};
+			this.handleshiptoCodeChange(d);
 		})
 	}
 
@@ -1281,12 +1287,14 @@ export default class CreateSalesOrder extends NavigationMixin(LightningElement) 
 			validationFlag = true;
 			emptyFieldName = 'Sales Person';
 			this.showToast(emptyFieldName + ' Cannot be empty', '', 'error');
-		} else if (this.endCustomerNameValue == '' || this.endCustomerNameValue == null) {
-			validationFlag = true;
-			this.showToast('End Customer Required!', '', 'error');
 		} else if (lwcInputFields) {
 			lwcInputFields.forEach(field => {
 				if (field.fieldName == 'External_Doc_No_PO__c') {
+					if (field.value == null || field.value == '') {
+						validationFlag = true;
+						// emptyFieldName = 'Freight Terms';
+					}
+				} else if (field.fieldName == 'EndCustomer__c') {
 					if (field.value == null || field.value == '') {
 						validationFlag = true;
 						// emptyFieldName = 'Freight Terms';
@@ -1612,11 +1620,16 @@ export default class CreateSalesOrder extends NavigationMixin(LightningElement) 
 
 	handlerNavResponse(event) {
 		this.pushToNavDisabled = true;
-		console.log('Event: ', event.detail.resmsg);
+		console.log('handlerNavResponse: ', event.detail.resmsg);
 		var tempData = event.detail.resmsg;
-		if (tempData.includes('SOB/') && this.isCreatedFromTSD == false) {
+		if (tempData.includes('SOB/')) {
 			// this.pushToNavDisabled = false;
-			this.pushToNav();
+			if (this.isCreatedFromTSD == false) {
+				this.pushToNav();
+			} else {
+				this.showSpinner = false;
+				this.showSpinner2 = false;
+			}
 		}
 	}
 

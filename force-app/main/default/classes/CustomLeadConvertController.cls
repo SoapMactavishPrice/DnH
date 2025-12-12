@@ -154,6 +154,9 @@ throw new AuraHandledException(e.getMessage());
                 acc.Mobile_Number_1__c = leadRecord.Mobile_Number__c;
                 // acc.Industry = leadRecord.Industry__c;
                 acc.Industry__c = leadRecord.Industry__c;
+                // map Customer Category from Lead to new Account
+                acc.Customer_Category__c = leadRecord.Customer_Category__c;
+                acc.State__c = leadRecord.State__c;
                 acc.Website = leadRecord.Website__c;
                 acc.Email_Id__c = leadRecord.Email__c;
                 acc.Other_Repeat_Calls_Frequency__c = leadRecord.Other_Repeat_Calls_Frequency__c;
@@ -468,6 +471,7 @@ throw new AuraHandledException(e.getMessage());
                 cont.FirstName = contactName.get('FirstName');
                 cont.MiddleName = contactName.get('MiddleName');
                 cont.LastName = contactName.get('LastName');
+                cont.Department__c = leadRecord.Department__c;
                 //cont.Company_Name__c = leadRecord.Company_Name__c;
                 cont.Title = leadRecord.Title__c;
                 //cont.Role__c = leadRecord.Role__c;

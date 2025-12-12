@@ -67,7 +67,7 @@ public class CreateSalesRegisterFromNAV_API {
                 System.debug('responseLog ' + responseLog.getText());
                 // Extract the text content of the responseLog element
 
-                if(responseLog != null){
+                if (responseLog != null) {
                     String returnValueLogContent = responseLog.getText();
 
                     // Extract the JSON string
@@ -120,72 +120,88 @@ public class CreateSalesRegisterFromNAV_API {
 
     }
 
-    public static void insertSalesRegisterData(String jsonData, String accId, String enggId){
+    public static void insertSalesRegisterData(String jsonData, String accId, String enggId) {
 
         // Parse the JSON string into a list of objects
-        List<SalesRegisterData> salesRegList = (List<SalesRegisterData>) JSON.deserialize(jsonData, List<SalesRegisterData>.class);
+        List < SalesRegisterData > salesRegList = (List < SalesRegisterData > ) JSON.deserialize(jsonData, List < SalesRegisterData > .class);
 
-        List<Sales_Register__c> insertSalesRegisterListRegister = new List<Sales_Register__c>();
+        List < Sales_Register__c > insertSalesRegisterListRegister = new List < Sales_Register__c > ();
 
         // Set of Item Number and SOB number
-        Set<String> itemNumberSet = new Set<String>();
-        Set<String> salesOrderSet = new Set<String>();
+        Set < String > itemNumberSet = new Set < String > ();
+        Set < String > salesOrderSet = new Set < String > ();
+        Set < String > endCustomerSet = new Set < String > ();
 
-        for(SalesRegisterData data : salesRegList){
+        for (SalesRegisterData data: salesRegList) {
             itemNumberSet.add(data.No);
             salesOrderSet.add(data.SalesOrderNo);
+            endCustomerSet.add(data.EndCustomerName);
         }
 
         // Get Item and Sales order list
-        List<Item_Master__c> imList = [
+        List < Item_Master__c > imList = [
             SELECT Id, Name, Item_Number__c, Item_Description__c
             FROM Item_Master__c
-            WHERE Item_Number__c IN :itemNumberSet
+            WHERE Item_Number__c IN: itemNumberSet
         ];
 
-        List<Sales_Order__c> soList = [
+        List < Sales_Order__c > soList = [
             SELECT Id, Name, Sales_Document_Number__c
             FROM Sales_Order__c
-            WHERE Sales_Document_Number__c IN :salesOrderSet
+            WHERE Sales_Document_Number__c IN: salesOrderSet
         ];
 
-        List<Service_5_Sample_Request__c> sampleSOList = [
+        List < Service_5_Sample_Request__c > sampleSOList = [
             SELECT Id, Name, Sample_Order_Number__c
             FROM Service_5_Sample_Request__c
-            WHERE Sample_Order_Number__c IN :salesOrderSet
+            WHERE Sample_Order_Number__c IN: salesOrderSet
+        ];
+
+        List < Account > endCustomerAccList = [
+            SELECT Id, Name
+            FROM Account
+            WHERE Name IN: endCustomerSet
         ];
 
         // Create Master map for Item and Sales Order
-        Map<String, Object> itemMasterMap = new Map<String, Object>();
-        Map<String, Object> itemMasterDescMap = new Map<String, Object>();
-        Map<String, Object> salesOrderMap = new Map<String, Object>();
-        Map<String, Object> sampleSalesOrderMap = new Map<String, Object>();
+        Map < String, Object > itemMasterMap = new Map < String, Object > ();
+        Map < String, Object > itemMasterDescMap = new Map < String, Object > ();
+        Map < String, Object > salesOrderMap = new Map < String, Object > ();
+        Map < String, Object > sampleSalesOrderMap = new Map < String, Object > ();
+        Map < String, Object > endCustomerMap = new Map < String, Object > ();
 
-        for(Item_Master__c ims : imList){
+        for (Item_Master__c ims: imList) {
             itemMasterMap.put(ims.Item_Number__c, ims.Id);
             itemMasterDescMap.put(ims.Item_Number__c, ims.Item_Description__c);
         }
 
-        for(Sales_Order__c sos : soList){
+        for (Sales_Order__c sos: soList) {
             salesOrderMap.put(sos.Sales_Document_Number__c, sos.Id);
         }
 
-        for(Service_5_Sample_Request__c sso : sampleSOList){
+        for (Service_5_Sample_Request__c sso: sampleSOList) {
             sampleSalesOrderMap.put(sso.Sample_Order_Number__c, sso.Id);
         }
 
+        for (Account accs: endCustomerAccList) {
+            endCustomerMap.put(accs.Name, accs.Id);
+        }
+
         // Read response JSON
-        for(SalesRegisterData data : salesRegList){
+        for (SalesRegisterData data: salesRegList) {
             if (data.EngineerID == enggId) {
                 // System.debug('data: ' + data);
                 Sales_Register__c sr = new Sales_Register__c();
                 sr.Voucher_No__c = data.VoucherNo;
                 sr.Type__c = data.Type;
                 if (itemMasterMap.containsKey(data.No)) {
-                    sr.Item_No__c = (String)itemMasterMap.get(data.No);
+                    sr.Item_No__c = (String) itemMasterMap.get(data.No);
                 }
                 if (itemMasterDescMap.containsKey(data.No)) {
-                    sr.Item_Description__c = (String)itemMasterDescMap.get(data.No);
+                    sr.Item_Description__c = (String) itemMasterDescMap.get(data.No);
+                }
+                if (endCustomerMap.containsKey(data.EndCustomerName)) {
+                    sr.End_Customer__c = (String) endCustomerMap.get(data.EndCustomerName);
                 }
                 sr.No__c = data.No;
                 // sr.Item_No__c = im.size()>0 ? im[0].Id : null;
@@ -196,39 +212,40 @@ public class CreateSalesRegisterFromNAV_API {
                 sPostingDate = sPostingDate.replace('/', '-');
                 sr.Posting_Date__c = Date.valueOf(sPostingDate);
                 String sQuantityinVariantSKU = data.QuantityinVariantSKU;
-                sQuantityinVariantSKU = sQuantityinVariantSKU.replace(',',''); 
+                sQuantityinVariantSKU = sQuantityinVariantSKU.replace(',', '');
                 sr.Quantity_in_Variant_SKU__c = Decimal.valueOf(sQuantityinVariantSKU);
                 sr.Unit_of_Measure_Code__c = data.UitofMeasureCode;
                 String sQuantityinKGS = data.QuantityinKGS;
-                sQuantityinKGS = sQuantityinKGS.replace(',',''); 
+                sQuantityinKGS = sQuantityinKGS.replace(',', '');
                 sr.Quantity_in_KGS__c = Decimal.valueOf(sQuantityinKGS);
                 String sNetInvoiceValue = data.NetInvoiceValue;
-                sNetInvoiceValue = sNetInvoiceValue.replace(',',''); 
+                sNetInvoiceValue = sNetInvoiceValue.replace(',', '');
                 sr.Net_Invoice_Value__c = Decimal.valueOf(sNetInvoiceValue);
                 sr.Stati_State__c = data.StatiState;
                 sr.Sales_Engineer__c = data.SalesEngineer;
                 sr.SPECIAL_CATEGO__c = data.SPECIALCATEGO;
                 sr.Item_Brand__c = data.BrandName;
                 String sTaxableValue = data.TaxableValue;
-                sTaxableValue = sTaxableValue.replace(',',''); 
+                sTaxableValue = sTaxableValue.replace(',', '');
                 sr.Taxable_Value__c = Decimal.valueOf(sTaxableValue);
                 String sSalesOrderNo = data.SalesOrderNo;
                 if (sSalesOrderNo.contains('SOB/')) {
                     if (salesOrderMap.containsKey(data.SalesOrderNo)) {
-                        sr.Sales_Order__c = (String)salesOrderMap.get(data.SalesOrderNo);
+                        sr.Sales_Order__c = (String) salesOrderMap.get(data.SalesOrderNo);
                     }
                 } else if (sSalesOrderNo.contains('SOM/')) {
                     if (sampleSalesOrderMap.containsKey(data.SalesOrderNo)) {
-                        sr.Service_5_Sample_Request__c = (String)sampleSalesOrderMap.get(data.SalesOrderNo);
+                        sr.Service_5_Sample_Request__c = (String) sampleSalesOrderMap.get(data.SalesOrderNo);
                     }
                 }
                 sr.Item_Traget_Category__c = data.ItemTarCategory;
                 sr.Sales_Order_No__c = data.SalesOrderNo;
+                sr.Sales_Engineer_Id__c = data.EngineerID;
                 insertSalesRegisterListRegister.add(sr);
             }
         }
 
-        if(insertSalesRegisterListRegister.size() > 0){
+        if (insertSalesRegisterListRegister.size() > 0) {
             insert insertSalesRegisterListRegister;
         }
 
@@ -253,6 +270,7 @@ public class CreateSalesRegisterFromNAV_API {
         public String EngineerID;
         public String ItemTarCategory;
         public String SalesOrderNo;
+        public String EndCustomerName;
     }
 
 }

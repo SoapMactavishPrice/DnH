@@ -4,7 +4,7 @@ public class HttpUtils {
         List<String> fields = new List<String>(Schema.getGlobalDescribe().get(ObjectName).getDescribe().fields.getMap().keySet());
          String query  = 'SELECT ';
          if(ObjectName=='Sales_Order__c'){
-            query=query+'Inserted_By_SP__r.IsApprovedUser__c,Zonal_Head__r.Code__c,Zonal_Head__r.Zonal_Manager__c,Area_Manager__r.Code__c,SubmittedBy__r.Code__c,Inserted_By_SP__r.Code__c,Updated_By_SP__r.Code__c,Enquiry__r.Document_No__c,Enquiry__r.Enquiry_Name__c,Inserted_By_Customer__r.Customer_Code__c,LR_Destination_2__r.Code__c,Transporter__r.Code__c,Transporter__r.Name, ';
+            query=query+'Inserted_By_SP__r.IsApprovedUser__c,Zonal_Head__r.Code__c,Zonal_Head__r.Zonal_Manager__c,Area_Manager__r.Code__c,SubmittedBy__r.Code__c,Inserted_By_SP__r.Code__c,Updated_By_SP__r.Code__c,Enquiry__r.Document_No__c,Enquiry__r.Enquiry_Name__c,Inserted_By_Customer__r.Customer_Code__c,LR_Destination_2__r.Code__c,Transporter__r.Code__c,Transporter__r.Name,EndCustomer__r.Name, ';
         }
         if(ObjectName=='Enquiry__c'){
             query=query+'Field_Staff_Code__r.IsApprovedUser__c,Field_Staff_Code__r.Reporting_Person__c,Area_Manager__r.Code__c,Field_Staff_Code__r.Area_Manager__c,Field_Staff_Code__r.Reporting_Person_ID__c, ';

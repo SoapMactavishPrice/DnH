@@ -19,6 +19,15 @@ public class IndiaMart_APITest {
             State__c = s.Id,
             City__c = c.Id
         );
+        
+        insert new Lead(
+            LastName = 'Existing Lead',
+            MobilePhone = '9876543210',
+            Company = 'Test',
+            Email = 'testtest@gmail.com',
+            State__c = s.Id,
+            City__c = c.Id
+        );
     }
 
     @IsTest

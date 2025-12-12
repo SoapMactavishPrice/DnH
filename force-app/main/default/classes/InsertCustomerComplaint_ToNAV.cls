@@ -96,7 +96,7 @@ public class InsertCustomerComplaint_ToNAV {
         salesOrder.put('nAVService19Attachments', null);
 
         // salesOrder.put('ComplaintQty', ord.Complaint_Quantity__c.stripTrailingZeros().format());
-        // salesOrder.put('EndCustomerName', ord.EndCustomerName__c);
+        // salesOrder.put('EndCustomerName', ord.End_Customer_Name__c);
         // salesOrder.put('Qty', ord.Batch_Quantity__c.stripTrailingZeros().format());
         // salesOrder.put('TypeOfCompaint', ord.Type_Of_Complaints__c);
         // salesOrder.put('EntryType', ord.Entry_Type__c);

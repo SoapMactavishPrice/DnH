@@ -206,7 +206,11 @@ public class CreateSalesOrder_ToTSDportal {
             salesOrder.put('Delivery_Type', 'Door'); //Door
         }
         salesOrder.put('Area_Manager', ord.Area_Manager__r.Code__c);
-        salesOrder.put('End_Customer_Name', ord.End_Customer_Name__c);
+        // salesOrder.put('End_Customer_Name', ord.End_Customer_Name__c);
+        salesOrder.put('End_Customer_Name', '');
+        if (ord.EndCustomer__c != null) {
+            salesOrder.put('End_Customer_Name', ord.EndCustomer__r.Name);
+        }
         salesOrder.put('Zonal_Head', ord.Zonal_Head__r.Code__c);
         salesOrder.put('Contact', ord.Contact_Name__c);
         // salesOrder.put('EngineerID', ord.EngineerID__c); // Need to check

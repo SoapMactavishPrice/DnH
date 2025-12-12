@@ -6,6 +6,7 @@ global class CreateSalesOrderWithTCO {
         RestRequest request = RestContext.request;
         RestResponse response = RestContext.response;
         String jSONRequestBody = request.requestBody.toString().replace('\n', '');
+        Sales_Order__c newSO = new Sales_Order__c();
 
         // ------------------- API LOG to track the request -------------------
         API_Log__c api_log = new API_Log__c();
@@ -45,7 +46,7 @@ global class CreateSalesOrderWithTCO {
 
                 if (getExistingAcc.size() > 0 && getEnqByDocNo.size() > 0) {
 
-                    Sales_Order__c newSO = new Sales_Order__c();
+                    
                     newSO.Name = jsonObj.WebOrderNo;
                     newSO.Account__c = getExistingAcc[0].Id;
                     newSO.Enquiry__c = getEnqByDocNo[0].Id;
@@ -159,6 +160,7 @@ global class CreateSalesOrderWithTCO {
                         List<Item_Master__c> itemMasterByNum = [
                             SELECT Id, Name, Item_Number__c FROM Item_Master__c
                             WHERE Item_Number__c =: a.Item_Number
+                            AND Item_Type__c = 'Normal'
                         ];
                         if (itemMasterByNum.size() > 0) {                        
                             soli.Item_Master__c = itemMasterByNum[0].Id;
@@ -304,7 +306,7 @@ global class CreateSalesOrderWithTCO {
                     String sURL = Label.Cust_URL+'/lightning/n/Create_Sales_Order?c__enquiryId='+getEnqByDocNo[0].Id+'&c__accountId=' + newSO.Account__c + '&c__recordtypeId=' + recordTypes.Id + '&c__orderId=' + newSO.Id;
                     // String sURL = 'https://dream-inspiration-9915.lightning.force.com/lightning/n/Create_Sales_Order?c__accountId=' + newSO.Account__c + '&c__recordtypeId=' + recordTypes.Id + '&c__orderId=' + newSO.Id;
 
-                    AddSalesOrder.sendEmailToAreaManager(newSO.Id, sURL);
+                    // AddSalesOrder.sendEmailToAreaManager(newSO.Id, sURL); // Move to after (insert api_log;)
                     
                 } else {
                     // ------------------- Send the Success Response -------------------
@@ -366,6 +368,10 @@ global class CreateSalesOrderWithTCO {
         }
 
         insert api_log;
+
+        if (!Test.isRunningTest()) {            
+            System.enqueueJob(new SendEmailJob(newSO.Id));
+        }
 
     }
 

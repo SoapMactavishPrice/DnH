@@ -41,7 +41,7 @@ public with sharing class TechCommOfferController {
                 FROM Customer_Sales_Person_Mapping__c
                 WHERE Account__r.Customer_Type__c = 'End Customer'
                 // AND Sales_Person_Code__c = 'DNH1077'
-                AND Sales_Person_Code__c = :usr.Code__c
+                AND Sales_Person_Code__c =: usr.Code__c
             ];
 
             List < Map < String, String >> optionList = new List < Map < String, String >> ();
@@ -403,7 +403,7 @@ public with sharing class TechCommOfferController {
                 insert contentVersion;
 
                 // Query ContentDocumentId from the inserted ContentVersion
-                Id contentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id = :contentVersion.Id].ContentDocumentId;
+                Id contentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =: contentVersion.Id].ContentDocumentId;
 
                 // Create ContentDocumentLink
                 ContentDocumentLink contentLink = new ContentDocumentLink();
@@ -418,9 +418,9 @@ public with sharing class TechCommOfferController {
                     // Name = title +'- public file ',
                     Name = title,
                     ContentVersionId = contentVersion.Id,
-                    PreferencesAllowViewInBrowser= true,
-                    PreferencesLinkLatestVersion=true,
-                    PreferencesNotifyOnVisit=false
+                    PreferencesAllowViewInBrowser = true,
+                    PreferencesLinkLatestVersion = true,
+                    PreferencesNotifyOnVisit = false
 
                 );
                 insert contentDist;

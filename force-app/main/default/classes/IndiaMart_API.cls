@@ -6,7 +6,8 @@ public class IndiaMart_API {
 
         Date today = Date.today(); // gets today's date
         Date datepara = today.addDays(-1);
-        DateTime myDateTime = DateTime.newInstance(datepara, Time.newInstance(0, 0, 0, 0));
+
+        DateTime myDateTime = DateTime.newInstance(today, Time.newInstance(0, 0, 0, 0));
 
         String formattedDate = myDateTime.format('dd-MMM-yyyy');
         
@@ -19,10 +20,10 @@ public class IndiaMart_API {
             // Construct URL with dynamic date
             String url = System.Label.indiamartURL
             + '?glusr_crm_key='+System.Label.indiamartcrmkey
-            // + '&start_time=' + formattedDate
-            // + '&end_time=' + formattedDate;
-            + '&start_time=06-Jan-2025'
-            + '&end_time=06-Jan-2025';
+            + '&start_time=' + formattedDate
+            + '&end_time=' + formattedDate;
+            // + '&start_time=06-Jan-2025'
+            // + '&end_time=06-Jan-2025';
 
             // Initialize the HTTP request
             HttpRequest req = new HttpRequest();
@@ -50,23 +51,29 @@ public class IndiaMart_API {
                     Set<String> stateSet = new Set<String>();
                     // Set<String> countrySet = new Set<String>();
                     Set<String> mobileSet = new Set<String>();
+                    Set < String > emailSet = new Set < String > ();
     
                     for(InquiryWrapper iw : inquiries) {
                         citySet.add(iw.SENDER_CITY);
                         stateSet.add(iw.SENDER_STATE);
                         // countrySet.add(iw.SENDER_COUNTRY_ISO);
                         mobileSet.add(iw.sender_mobile);
+                        emailSet.add(iw.sender_email);
                     }
     
                     List<City__c> cityList = [SELECT Name, Id FROM City__c WHERE Name IN :citySet];
                     List<State__c> stateList = [SELECT Name, Id FROM State__c WHERE Name IN :stateSet];
                     // List<Country__c> countryList = [SELECT Name, Id FROM Country__c WHERE Name IN :countrySet];
                     List<Lead__c> leadList = [SELECT Id, Mobile_Number__c FROM Lead__c WHERE Mobile_Number__c IN :mobileSet];
+                    List < Lead > stdLeadList = [SELECT Id, MobilePhone, Email FROM Lead WHERE MobilePhone IN: mobileSet OR Email IN: emailSet];
     
                     Map<String, String> cityMap = new Map<String, String>();
                     Map<String, String> stateMap = new Map<String, String>();
                     // Map<String, String> countryMap = new Map<String, String>();
                     Map<String, String> leadMap = new Map<String, String>();
+                    Map < String, String > stdLeadMap = new Map < String, String > ();
+                    Set<String> leadIdSet = new Set<String>();
+                    Set < String > stdLeadIdSet = new Set < String > ();
     
                     for(City__c c : cityList) {
                         cityMap.put(c.Name, c.Id);
@@ -82,6 +89,24 @@ public class IndiaMart_API {
     
                     for(Lead__c l : leadList) {
                         leadMap.put(l.Mobile_Number__c, l.Id);
+                        leadIdSet.add(l.Id);
+                    }
+
+                    for (Lead l: stdLeadList) {
+                        if (String.isNotBlank(l.MobilePhone)) {
+                            stdLeadMap.put(l.MobilePhone, l.Id);
+                        }
+                        if (String.isNotBlank(l.Email)) {
+                            stdLeadMap.put(l.Email, l.Id);
+                        }
+                        stdLeadIdSet.add(l.Id);
+                    }
+
+                    List<Lead_Source__c> leadSourceList = [SELECT Id, UID__c, Lead__c FROM Lead_Source__c WHERE Lead__c IN :leadIdSet];
+
+                    Map<String, String> leadSourceMap = new Map<String, String>();
+                    for(Lead_Source__c ls : leadSourceList) {
+                        leadSourceMap.put(ls.UID__c, ls.Id);
                     }
     
                     List<Lead__c> leadsToInsert = new List<Lead__c>();
@@ -93,13 +118,20 @@ public class IndiaMart_API {
                             l.IndiaMart__c = true;
                         } else {
                             l.Lead_Source__c = 'Indiamart';
-                            l.Last_Name__c = inq.SENDER_NAME;
-                            l.Name = inq.SENDER_NAME;
+                            l.IndiaMart__c = true;
+                            l.Last_Name__c = 'Esteemed Client';
+                            l.Name = 'Esteemed Client';
+                            if (String.isNotBlank(inq.SENDER_NAME)) {
+                                l.Last_Name__c = inq.SENDER_NAME;
+                            }
+                            if (String.isNotBlank(inq.SENDER_COMPANY)) {
+                                l.Name = inq.SENDER_COMPANY;
+                            }
                             l.Mobile_Number__c = inq.SENDER_MOBILE;
                             l.Email__c = inq.SENDER_EMAIL;
                         }
                         l.Subject__c = inq.SUBJECT;
-                        l.Company_Name__c = inq.SENDER_COMPANY;
+                        // l.Company_Name__c = inq.SENDER_COMPANY;
                         l.Street_Address__c = inq.SENDER_ADDRESS;
                         l.City__c = cityMap.get(inq.SENDER_CITY);
                         l.State__c = stateMap.get(inq.SENDER_STATE);
@@ -111,7 +143,7 @@ public class IndiaMart_API {
 
 
                         API_Log__c apilog = new API_Log__c();
-                        apilog.Log_Name__c = 'TradeIndia_API_Subdata : '+formattedDate+' ('+inq.SENDER_MOBILE+')';
+                        apilog.Log_Name__c = 'IndiaMart_API_Subdata : '+formattedDate+' ('+inq.SENDER_MOBILE+')';
                         apilog.created_date__c = Datetime.now();
                         apilog.Request_Url__c = url;
                         apilog.Response__c = JSON.serialize(inq);
@@ -131,31 +163,54 @@ public class IndiaMart_API {
                             Lead__c insertedLead = leadsToInsert[i];
                             InquiryWrapper originalData = inquiries[i];
 
-                            Lead_Source__c child = new Lead_Source__c(
-                                Lead__c = insertedLead.Id,
-                                Receiver_Mobile__c = originalData.RECEIVER_MOBILE,
-                                Subject__c = originalData.SUBJECT,
-                                Message__c = originalData.QUERY_MESSAGE,
-                                Product_Name__c = originalData.QUERY_PRODUCT_NAME,
-                                Lead_Source__c = 'Indiamart',
-                                Mobile_No__c = originalData.SENDER_MOBILE
-                                
-                               /* String mobilePhone = originalData.SENDER_MOBILE;
-                                mobilePhone = mobilePhone.replaceAll(' ', '');
-                                if(mobilePhone.length() == 10) {
-                                    mobilePhone = '91' + mobilePhone;
-                                } else if(mobilePhone.startsWith('0')) {
-                                    mobilePhone = mobilePhone.replaceFirst('0', '91');
-                                }
-                                mobilePhone = mobilePhone.replaceAll('\\+', '');
-                                MC_Mobile_No__c = mobilePhone;*/
-                                
-                                
-                            );
-                            childRecords.add(child);
+                            String rawMobile = originalData.SENDER_MOBILE;
+                            // String cleanedMobile = rawMobile.replaceAll('[^0-9]', '');
+                            // Get the last 10 digits
+                            String tenDigitMobile = rawMobile.right(10);
+
+                            String stdLeadId = '';
+                            Lead insertStdLead = new Lead();
+
+                            if (stdLeadMap.containsKey(originalData.sender_email)) {
+                                stdLeadId = stdLeadMap.get(originalData.sender_email);
+                            } else if (stdLeadMap.containsKey(originalData.sender_mobile)) {
+                                stdLeadId = stdLeadMap.get(originalData.sender_mobile);
+                            } else {
+                                // insertStdLead.FirstName   = originalData.sender_name != null ? cl.Last_Name__c : 'Unknown';
+                                insertStdLead.LastName = originalData.SENDER_NAME != null ? originalData.SENDER_NAME : 'Esteemed Client'; // LastName required
+                                insertStdLead.Company = originalData.SENDER_COMPANY != null ? originalData.SENDER_COMPANY : 'Esteemed Client'; // Company required
+                                insertStdLead.MobilePhone = originalData.SENDER_MOBILE;
+                                insertStdLead.Email = originalData.SENDER_EMAIL;
+                                insertStdLead.MC_Mobile_No__c = '91' + tenDigitMobile;
+                                insertStdLead.LeadSource = 'Indiamart'; // map source too
+                                insertStdLead.Lead_created_via_TI_and_IM__c = true;
+                                insert insertStdLead;
+                                stdLeadId = insertStdLead.Id;
+                            }
+
+                            System.debug('stdLeadId:>>> ' + stdLeadId);
+
+                            if (!leadSourceMap.containsKey(originalData.UNIQUE_QUERY_ID)) {
+                                Lead_Source__c child = new Lead_Source__c(
+                                    Lead__c = insertedLead.Id,
+                                    Receiver_Mobile__c = originalData.RECEIVER_MOBILE,
+                                    Subject__c = originalData.SUBJECT,
+                                    Message__c = originalData.QUERY_MESSAGE,
+                                    Product_Name__c = originalData.QUERY_PRODUCT_NAME,
+                                    Lead_Source__c = 'Indiamart',
+                                    Mobile_No__c = originalData.SENDER_MOBILE,
+                                    UID__c = originalData.UNIQUE_QUERY_ID,
+                                    MC_Mobile_No__c = '91'+tenDigitMobile,
+                                    Email__c = originalData.SENDER_EMAIL,
+                                    Std_Lead__c = stdLeadId
+                                );
+                                childRecords.add(child);
+                            }
                         }
 
-                        insert childRecords;
+                        if (childRecords.size() > 0) {
+                            insert childRecords;
+                        }
                     }
                 } else {
                     

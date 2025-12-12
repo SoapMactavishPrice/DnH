@@ -15,7 +15,8 @@ public class S7_SalesInvoiceHeader_Test {
             LocaleSidKey = 'en_US',
             EmailEncodingKey = 'UTF-8',
             ProfileId = [SELECT Id FROM Profile WHERE Name = 'Standard User' LIMIT 1].Id,
-            LanguageLocaleKey = 'en_US'
+            LanguageLocaleKey = 'en_US',
+            Code__c = 'DNH1974'
         );
         insert testUser;
 
@@ -25,7 +26,7 @@ public class S7_SalesInvoiceHeader_Test {
             Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
 
             Test.startTest();
-            S7_SalesInvoiceHeader.getInvoiceList('2023-01-01', '2023-01-31', 'testUser');
+            S7_SalesInvoiceHeader.getInvoiceList('2023-01-01', '2023-01-31', 'DNH1974');
             Test.stopTest();
 
             // Assert the result

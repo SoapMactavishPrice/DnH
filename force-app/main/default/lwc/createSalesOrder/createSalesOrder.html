@@ -38,12 +38,16 @@
 					<lightning-input-field field-name="Rate_Type__c" value={rateType}
 						style="padding-bottom: 10px !important;" label="Rate Type" disabled>
 					</lightning-input-field>
-					<div style="display: flex; align-items: center; justify-content: space-between;">
+					<!-- <div style="display: flex; align-items: center; justify-content: space-between;">
 						<lightning-combobox name="End Customer Name" label="End Customer" value={endCustomerNameValue}
 							variant="label-inline" placeholder="Select End Customer" options={endCustomerOptions}
 							onchange={handleEndCustomerChange} style="width: 67%;" required>
 						</lightning-combobox>
-					</div>
+					</div> -->
+					<lightning-input-field field-name="EndCustomer__c"
+						style="padding-bottom: 10px !important;" label="End Customer"
+						data-name="endcustomerlookup" required>
+					</lightning-input-field>
 					<lightning-input-field field-name="End_Customer_Name__c"
 						style="padding-bottom: 10px !important; display: none;" label="End Customer Name:"
 						data-name="endcustomername">
