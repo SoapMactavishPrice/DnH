@@ -4,9 +4,22 @@ public class ContactAddCountryCodeTest {
     @IsTest
     static void testManualContactCreation_Add91Prefix() {
         // Case 1: User enters number manually without 91
+
+        Country__c country = new Country__c();
+        country.Name = 'Brazil';
+        country.Digits__c = 6;
+        country.Country_Code__c = '55';
+        insert country;
+
+        Account acc = new Account();
+        acc.Name = 'Test Account';
+        acc.Country__c = country.Id;
+        insert acc;
+
         Contact con = new Contact(
             LastName = 'Manual Test',
-            MC_Mobile_No__c = '9876543210'
+            MC_Mobile_No__c = '9876543210',
+            AccountId = acc.Id
         );
         insert con;
 
