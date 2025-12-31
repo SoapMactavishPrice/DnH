@@ -5,17 +5,15 @@ trigger ContactAddCountryCode on Contact (before insert, before update) {
             con.MC_Mobile_No__c = con.MobilePhone;
         }
 
-        if (
-            String.isNotBlank(con.MC_Mobile_No__c) &&
-            con.Digits__c != null &&
-            String.isNotBlank(con.Country_Code__c)
-        ) {
+        if (String.isNotBlank(con.MC_Mobile_No__c)) {
+            String countryCode = String.isNotBlank(con.Country_Code__c) ? con.Country_Code__c : '91';
+            Integer digits = con.Digits__c != null ? Integer.valueOf(con.Digits__c) : 10;
+
             String mobile = con.MC_Mobile_No__c.replaceAll('[^0-9]', '');
-            Integer digits = Integer.valueOf(con.Digits__c);
 
             if (mobile.length() >= digits) {
                 mobile = mobile.substring(mobile.length() - digits);
-                con.MC_Mobile_No__c = con.Country_Code__c + mobile;
+                con.MC_Mobile_No__c = countryCode + mobile;
             } else {
                 con.MC_Mobile_No__c = null;
             }

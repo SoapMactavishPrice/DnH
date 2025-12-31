@@ -5,7 +5,7 @@ public class LeadTriggerHandlerTest {
     static void testUpdateLeadAddresses() {
         
         // Step 2: Create mock records for Postal_Code, Area, City, and State
-        Country__c testCountry = new Country__c(Name = 'India');
+        Country__c testCountry = new Country__c(Name = 'India', Country_Code__c = '91', Digits__c = 10);
         insert testCountry;
         
         State__c testState = new State__c(Name = 'Test State', Country__c = testCountry.Id);
@@ -26,6 +26,7 @@ public class LeadTriggerHandlerTest {
             Last_Name__c = 'Lead1',
             Name = 'Test Company 1', // Required field
             Pin_Code__c = testPostalCode.Id,
+            Mobile_Number__c = '9876543210',
             Lead_Status__c = 'New'
         );
         
@@ -34,6 +35,7 @@ public class LeadTriggerHandlerTest {
             Last_Name__c = 'Lead2',
             Name = 'Test Company 2', // Required field
             Area_Name__c = testArea.Id,
+            Mobile_Number__c = '8765432109',
             Lead_Status__c = 'New'
         ); 
         

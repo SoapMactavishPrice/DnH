@@ -7,7 +7,6 @@ public class LeadTriggerHandler {
         Set<Id> cityIds = new Set<Id>();
         Set<Id> stateIds = new Set<Id>();
         
-        // Collect all relevant IDs from the leads being processed
         for (Lead__c lead : newLeads) {
             if (lead.Pin_Code__c  != null) {
                 postalCodeIds.add(lead.Pin_Code__c );
@@ -23,7 +22,6 @@ public class LeadTriggerHandler {
             }
         }
         
-        // Query the related records
         Map<Id, Pin_Code__c > postalCodeMap = new Map<Id, Pin_Code__c>(
             [SELECT Id, Area__c, Area__r.City__c, Area__r.City__r.State__c, Area__r.City__r.State__r.Country__c 
              FROM Pin_Code__c  WHERE Id IN :postalCodeIds]
@@ -38,7 +36,6 @@ public class LeadTriggerHandler {
             [SELECT Id, Country__c FROM State__c WHERE Id IN :stateIds]
         );
         
-        // Update the lead fields based on the selected values
         for (Lead__c lead : newLeads) {
             if (lead.Pin_Code__c != null && postalCodeMap.containsKey(lead.Pin_Code__c)) {
                 Pin_Code__c postalCode = postalCodeMap.get(lead.Pin_Code__c);
@@ -66,7 +63,6 @@ public class LeadTriggerHandler {
         
         for (Lead__c ld : newList) {
             
-            // Insert logic
             if (oldMap == null || !oldMap.containsKey(ld.Id)) {
                 if (ld.Lead_Status__c == 'New') {
                     ld.New_Status_Date__c  = Date.today();
@@ -74,17 +70,35 @@ public class LeadTriggerHandler {
                 continue;
             }
             
-            // Update logic
             Lead__c oldLead = oldMap.get(ld.Id);
             
-            // If status changed to NEW, set date
             if (ld.Lead_Status__c == 'New' && oldLead.Lead_Status__c != 'New') {
                 ld.New_Status_Date__c  = Date.today();
             }
-            
-            // If moved out of New, do nothing
-            // If staying in New, do nothing
         }
     }
     
+    public static void addCountryCodeToMobile(List<Lead__c> newLeads) {
+        
+        for (Lead__c lead : newLeads) {
+            
+            if (String.isBlank(lead.MC_Mobile_No__c) && String.isNotBlank(lead.Mobile_Number__c)) {
+                lead.MC_Mobile_No__c = lead.Mobile_Number__c;
+            }
+            
+            if (String.isNotBlank(lead.MC_Mobile_No__c)) {
+                String countryCode = String.isNotBlank(lead.Country_Code__c) ? lead.Country_Code__c : '91';
+                Integer digits = lead.Digits__c != null ? Integer.valueOf(lead.Digits__c) : 10;
+                
+                String mobile = lead.MC_Mobile_No__c.replaceAll('[^0-9]', '');
+                
+                if (mobile.length() >= digits) {
+                    mobile = mobile.substring(mobile.length() - digits);
+                    lead.MC_Mobile_No__c = countryCode + mobile;
+                } else {
+                    lead.MC_Mobile_No__c = null;
+                }
+            }
+        }
+    }
 }
